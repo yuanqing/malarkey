@@ -1,35 +1,45 @@
-/* globals define */
-var malarkey = function() {
+'use strict';
 
-  return function(elem) {
+var segue = require('segue');
 
-    var str = elem.innerHTML;
+var malarkey = function(elem, opts) {
+
+  // empty `element`
+  elem.innerHTML = '';
+
+  // read `opts`
+  var speed = opts.speed || 100;
+
+  // initialise queue
+  var queue = segue();
+
+  // type the `str`
+  var type = function(str) {
+    var that = this;
     var i = 0;
     var len = str.length;
-
-    elem.innerHTML = '';
-
-    var type = function() {
+    var t = function() {
       window.setTimeout(function() {
         elem.innerHTML += str[i];
         i += 1;
         if (i < len) {
-          type(i);
+          t(i);
+        } else {
+          that();
         }
-      }, 100);
+      }, speed);
     };
-    type();
+    t();
+  };
 
+  // add `str` to the queue to be typed
+  this.type = function(str) {
+    queue(type, str);
+    return this;
   };
 
 };
 
-(function(root, factory) {
-  if (typeof define === 'function' && define.amd) { // istanbul ignore
-    define(factory);
-  } else if (typeof exports === 'object') { // istanbul ignore
-    module.exports = factory;
-  } else {
-    root.malarkey = factory(root);
-  }
-})(this, malarkey);
+module.exports = exports = function(elem, opts) {
+  return new malarkey(elem, opts);
+};
