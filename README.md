@@ -1,6 +1,6 @@
 # Malarkey.js
 
-> Type out the contents of a DOM element.
+> Simulate a typewriter/ticker effect on a DOM element.
 
 ## Usage
 
@@ -13,7 +13,7 @@
     var opts = {
       speed: 50,
       loop: true,
-      postfix: ' ',
+      postfix: ' '
     };
     malarkey(elem, opts).type('Hello,').pause(2000).type('World!').pause(2000).clear();
   </script>
