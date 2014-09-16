@@ -11,9 +11,11 @@
   <script>
     var elem = document.querySelectorAll('.malarkey')[0];
     var opts = {
-      speed: 50
+      speed: 50,
+      loop: true,
+      postfix: ' ',
     };
-    malarkey(elem, opts).type('Hello, ').type('World!');
+    malarkey(elem, opts).type('Hello,').pause(2000).type('World!').pause(2000).clear();
   </script>
 </body>
 ```
