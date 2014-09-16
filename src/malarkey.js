@@ -4,13 +4,12 @@ var segue = require('segue');
 
 var malarkey = function(elem, opts) {
 
-  // empty `element`
-  elem.innerHTML = '';
-
   // read `opts`
   var speed = opts.speed || 100;
+  var loop = opts.loop || false;
+  var postfix = opts.postfix || '';
 
-  // initialise queue
+  // initialise the queue
   var queue = segue();
 
   // type the `str`
@@ -25,6 +24,9 @@ var malarkey = function(elem, opts) {
         if (i < len) {
           t(i);
         } else {
+          if (loop) {
+            queue(type, str);
+          }
           that();
         }
       }, speed);
@@ -32,9 +34,39 @@ var malarkey = function(elem, opts) {
     t();
   };
 
-  // add `str` to the queue to be typed
+  // pause typing for the `duration`
+  var pause = function(duration) {
+    var that = this;
+    window.setTimeout(function() {
+      if (loop) {
+        queue(pause, duration);
+      }
+      that();
+    }, duration);
+  };
+
+  // empty `elem`
+  var clear = function() {
+    elem.innerHTML = '';
+    if (loop) {
+      queue(clear);
+    }
+    this();
+  };
+
+  // add function to `queue`
   this.type = function(str) {
-    queue(type, str);
+    queue(type, str + postfix);
+    return this;
+  };
+  this.pause = function(duration) {
+    if (typeof duration !== 'undefined') {
+      queue(pause, duration);
+    }
+    return this;
+  };
+  this.clear = function() {
+    queue(clear);
     return this;
   };
 
