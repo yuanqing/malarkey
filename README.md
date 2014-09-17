@@ -13,7 +13,7 @@
     var opts = {
       speed: 100,
       loop: true,
-      postfix: ' ',
+      postfix: ''
     };
     malarkey(elem, opts).type('Say hello')   .pause(2000).delete()
                         .type('Wave goodbye').pause(2000).delete();
@@ -25,14 +25,14 @@
 
 ### malarkey(elem, opts)
 
-Initialises the typewriter/ticker effect on `elem`, with the given `opts` settings.
+Initialises the typewriter/ticker effect on `elem` with the given `opts` settings.
 
 - `elem` is a DOM element.
 
 - `opts` is an object literal. Settings include:
-  - `speed`: Time (in milliseconds) to type or delete a single character. Defaults to `100`.
-  - `loop`: Whether to repeat the entire sequence. Defaults to `false`.
-  - `postfix`: This is appended to the string passed to the `type` method. Defaults to the empty string.
+  - `speed` &mdash; Number of milliseconds to type or delete a single character. Defaults to `100`.
+  - `loop` &mdash; Whether to repeat the entire sequence. Defaults to `false`.
+  - `postfix` &mdash; This is appended to all strings passed to the `type` method. Defaults to `''`.
 
 ### malarkey.type(str [, speed])
 
@@ -41,7 +41,7 @@ Types the given `str`. If specified, `speed` (in milliseconds) overrides `opts.s
 ### malarkey.delete(str [, speed])
 
 - If `str` is a number, at most that many characters are deleted from the DOM element.
-- Otherwise, if the last string typed ends with `str`, then `str` is deleted from the DOM element.
+- Otherwise, if the last string typed ends with `str`, then said `str` is deleted from the DOM element.
 
 If specified, `speed` (in milliseconds) overrides `opts.speed`.
 
