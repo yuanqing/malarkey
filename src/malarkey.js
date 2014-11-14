@@ -4,114 +4,140 @@ var segue = require('segue');
 
 var malarkey = function(elem, opts) {
 
-  // read `opts`
-  opts.speed = opts.speed || 100;
+  // set `opts` to defaults if needed
+  opts = opts || {};
+  opts.speed = opts.speed || 50;
   opts.loop = opts.loop || false;
   opts.postfix = opts.postfix || '';
 
-  // initialise the queue
+  // cache `postfix` length
+  var postFixLen = opts.postfix.length;
+
+  // initialise the function queue
   var queue = segue();
 
-  // type the `str`
+  /**
+    * Check if `str` ends with `suffix`.
+    *
+    * @param {String} str
+    * @param {String} suffix
+    * @return {Boolean}
+    * @api private
+    */
+  var endsWith = function(str, suffix) {
+    return str.indexOf(suffix, str.length - suffix.length) !== -1;
+  };
+
+  /**
+    * Type the `str`.
+    *
+    * @param {String} str
+    * @param {Number} speed Time in milliseconds to type a single character
+    * @api public
+    */
   var type = function(str, speed) {
-    var that = this;
-    var i = 0;
+    var done = this;
     var len = str.length;
+    var i = 0;
     var t = function() {
       window.setTimeout(function() {
         elem.innerHTML += str[i];
-        i += 1;
+        i = i + 1;
         if (i < len) {
           t(i);
         } else {
           if (opts.loop) {
             queue(type, str, speed);
           }
-          that();
+          done();
         }
       }, speed);
     };
     t();
   };
 
-  // pause typing for the `duration`
+  /**
+    * Do nothing for the `duration`.
+    *
+    * @param {Number} duration Time in milliseconds
+    * @api public
+    */
   var pause = function(duration) {
-    var that = this;
+    var done = this;
     window.setTimeout(function() {
       if (opts.loop) {
         queue(pause, duration);
       }
-      that();
+      done();
     }, duration);
   };
 
-  var endsWith = function(str, suffix) {
-    return str.indexOf(suffix, str.length - suffix.length) !== -1;
-  };
-
-  // delete
-  var del = function(delStr, speed) {
-    var that = this;
-    var str = elem.innerHTML;
-    var len;
+  /**
+    * If `str` was set, delete `str` from `elem` if the `elem` ends with `str`.
+    * Else delete entire contents of `elem`.
+    *
+    * @param {String} str
+    * @param {Number} speed Time in milliseconds to delete a single character
+    * @api public
+    */
+  var _delete = function(str, speed) {
+    var done = this;
+    var curr = elem.innerHTML;
+    var count;
     var d;
-    if (typeof delStr === 'undefined') {
-      len = str.length;
-    } else {
-      if (parseInt(delStr, 10) === delStr) { // `str` is integer
-        if (delStr === -1) {
-          len = str.length;
-        } else {
-          len = delStr + opts.postfix.length;
-          len = len > str.length ? str.length : len;
-        }
+    if (typeof str !== 'undefined') {
+      // delete `str` from `elem`
+      if (endsWith(curr, str + opts.postfix)) {
+        count = str.length + postFixLen;
       } else {
-        if (endsWith(str, delStr + opts.postfix)) { // `str` is string
-          len = delStr.length + opts.postfix.length;
-        } else {
-          that();
-        }
+        done();
+        return;
       }
+    } else {
+      // delete entire contents of `elem`
+      count = curr.length;
     }
-    d = function(len) { // count is number of characters to delete
+    d = function(count) {
       window.setTimeout(function() {
-        var str = elem.innerHTML;
-        if (len) {
-          elem.innerHTML = str.substring(0, str.length-1);
-          d(len-1);
+        var curr = elem.innerHTML;
+        if (count) {
+          elem.innerHTML = curr.substring(0, curr.length-1); // drop last char
+          d(count - 1);
         } else {
           if (opts.loop) {
-            queue(del, delStr, speed);
+            queue(_delete, str, speed);
           }
-          that();
+          done();
         }
       }, speed);
     };
-    d(len);
+    d(count);
   };
 
-  // empty `elem`
+  /**
+    * Clear the contents of `elem`.
+    *
+    * @api public
+    */
   var clear = function() {
     elem.innerHTML = '';
     if (opts.loop) {
-      queue(clear);
+      queue(clear); // add identical call to `queue`
     }
     this();
   };
 
-  // add function to `queue`
+  // expose public API
   this.type = function(str, speed) {
     queue(type, str + opts.postfix, speed || opts.speed);
     return this;
   };
   this.delete = function(str, speed) {
-    queue(del, str, speed || opts.speed);
+    queue(_delete, str, speed || opts.speed);
     return this;
   };
   this.pause = function(duration) {
-    if (typeof duration !== 'undefined') {
-      queue(pause, duration);
-    }
+    queue(pause, duration);
     return this;
   };
   this.clear = function() {
