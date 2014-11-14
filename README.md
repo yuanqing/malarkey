@@ -31,19 +31,19 @@ Initialises the typewriter/ticker effect on `elem` with the given `opts` setting
 
 - `opts` is an object literal. The keys are:
   - `loop` &mdash; Whether to repeat the entire sequence. Defaults to `false`.
-  - `speed` &mdash; The time in milliseconds to `type` or `delete` a single character. Defaults to `50`.
-  - `delay` &mdash; The delay in milliseconds for the `pause` and `clear` method. Defaults to `50`.
-  - `postfix` &mdash; This is the string that is appended to the `str` passed to `type` and `delete`. Defaults to the empty string.
+  - `speed` &mdash; Time in milliseconds to `type` or `delete` a single character. Defaults to `50`.
+  - `delay` &mdash; Delay in milliseconds for the `pause` and `clear` methods. Defaults to `50`.
+  - `postfix` &mdash; This is appended to the `str` passed to `type` and `delete`. Defaults to the empty string.
 
 ### malarkey.type(str [, speed])
 
-Types the `str` at the given `speed` (in milliseconds).
+Types the `str` at the given `speed` (milliseconds per character).
 
-- `speed` &mdash; defaults to `opts.speed`.
+- `speed` &mdash; Defaults to `opts.speed`.
 
 ### malarkey.delete([str, speed])
 
-Deletes the `str` at the given `speed` (in milliseconds).
+Deletes the `str` at the given `speed` (milliseconds per character).
 
 - `str` &mdash; If specified, deletes `str` from `elem` if and only if the last string that was typed ends with `str`. Otherwise, deletes the entire contents of `elem`.
 - `speed` &mdash; Defaults to `opts.speed`.
