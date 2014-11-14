@@ -11,7 +11,7 @@ var malarkey = function(elem, opts) {
   opts.postfix = opts.postfix || '';
 
   // cache `postfix` length
-  var postFixLen = opts.postfix.length;
+  var postfixLen = opts.postfix.length;
 
   // initialise the function queue
   var queue = segue();
@@ -40,7 +40,7 @@ var malarkey = function(elem, opts) {
   };
 
   /**
-    * Type the `str`.
+    * Types the `str` at the given `speed`.
     *
     * @param {String} str
     * @param {Number} speed Time in milliseconds to type a single character
@@ -72,27 +72,12 @@ var malarkey = function(elem, opts) {
   };
 
   /**
-    * Do nothing for the `delay`.
+    * Deletes the `str` at the given `speed`.
     *
-    * @param {Number} delay Time in milliseconds
-    * @api public
-    */
-  var pause = function(delay) {
-    var done = this;
-    window.setTimeout(function() {
-      if (opts.loop) {
-        queue(pause, delay);
-      }
-      done();
-    }, delay);
-  };
-
-  /**
-    * If `str` was set, delete `str` from `elem` if the `elem` ends with `str`.
-    * Else delete entire contents of `elem`.
-    *
-    * @param {String} str
-    * @param {Number} speed Time in milliseconds to delete a single character
+    * @param {String} str If specified, deletes `str` from `elem` if and only if
+    * the last string that was typed ends with `str`, else deletes the entire
+    * contents of `elem`
+    * @param {Number} speed Time in milliseconds to type a single character
     * @api public
     */
   var _delete = function(str, speed) {
@@ -106,7 +91,7 @@ var malarkey = function(elem, opts) {
       } else {
         // delete `str` from `elem`
         if (endsWith(curr, str + opts.postfix)) {
-          count = str.length + postFixLen;
+          count = str.length + postfixLen;
         } else {
           count = 0;
         }
@@ -134,19 +119,36 @@ var malarkey = function(elem, opts) {
   };
 
   /**
-    * Clear the contents of `elem`.
+    * Do nothing for `delay`.
     *
+    * @param {Number} delay Time in milliseconds
     * @api public
     */
-  var clear = function(duration) {
+  var pause = function(delay) {
+    var done = this;
+    window.setTimeout(function() {
+      if (opts.loop) {
+        queue(pause, delay);
+      }
+      done();
+    }, delay);
+  };
+
+  /**
+    * Clears the contents of the DOM element after a `delay`.
+    *
+    * @param {Number} delay Time in milliseconds
+    * @api public
+    */
+  var clear = function(delay) {
     var done = this;
     window.setTimeout(function() {
       elem.innerHTML = '';
       if (opts.loop) {
-        queue(clear, duration);
+        queue(clear, delay);
       }
       done();
-    }, duration);
+    }, delay);
   };
 
   // expose public API
