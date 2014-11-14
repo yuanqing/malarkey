@@ -17,6 +17,8 @@
   },
   "main": "src/malarkey.js",
   "devDependencies": {
+    "brfs": "^1.2.0",
+    "browserify-istanbul": "^0.1.2",
     "gulp": "^3.8.0",
     "gulp-browserify": "^0.5.0",
     "gulp-jshint": "^1.8.2",
@@ -28,9 +30,11 @@
     "jquery": "^2.1.1",
     "jshint-stylish": "^0.4.0",
     "karma": "^0.12.23",
+    "karma-browserify": "^1.0.0",
     "karma-coverage": "^0.2.0",
     "karma-jasmine": "^0.2.0",
     "karma-phantomjs-launcher": "^0.1.4",
+    "karma-sourcemap-loader": "^0.3.0",
     "karma-spec-reporter": "^0.0.13",
     "sinon": "^1.11.1"
   },

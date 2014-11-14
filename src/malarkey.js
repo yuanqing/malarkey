@@ -5,8 +5,8 @@ var segue = require('segue');
 var malarkey = function(elem, opts) {
 
   // set `opts` to defaults if needed
-  opts = opts || {};
   opts.speed = opts.speed || 50;
+  opts.delay = opts.delay || 50;
   opts.loop = opts.loop || false;
   opts.postfix = opts.postfix || '';
 
@@ -15,6 +15,17 @@ var malarkey = function(elem, opts) {
 
   // initialise the function queue
   var queue = segue();
+
+  /**
+    * Check if `obj` is an integer.
+    *
+    * @param {Object} obj
+    * @return {Boolean}
+    * @api private
+    */
+  var isInteger = function(obj) {
+    return parseInt(obj, 10) === obj;
+  };
 
   /**
     * Check if `str` ends with `suffix`.
@@ -39,6 +50,10 @@ var malarkey = function(elem, opts) {
     var done = this;
     var len = str.length;
     var i = 0;
+    if (len === 0) {
+      done();
+      return;
+    }
     var t = function() {
       window.setTimeout(function() {
         elem.innerHTML += str[i];
@@ -57,19 +72,19 @@ var malarkey = function(elem, opts) {
   };
 
   /**
-    * Do nothing for the `duration`.
+    * Do nothing for the `delay`.
     *
-    * @param {Number} duration Time in milliseconds
+    * @param {Number} delay Time in milliseconds
     * @api public
     */
-  var pause = function(duration) {
+  var pause = function(delay) {
     var done = this;
     window.setTimeout(function() {
       if (opts.loop) {
-        queue(pause, duration);
+        queue(pause, delay);
       }
       done();
-    }, duration);
+    }, delay);
   };
 
   /**
@@ -83,19 +98,23 @@ var malarkey = function(elem, opts) {
   var _delete = function(str, speed) {
     var done = this;
     var curr = elem.innerHTML;
-    var count;
+    var count = curr.length; // default to deleting entire contents of `elem`
     var d;
     if (typeof str !== 'undefined') {
-      // delete `str` from `elem`
-      if (endsWith(curr, str + opts.postfix)) {
-        count = str.length + postFixLen;
+      if (isInteger(str)) {
+        speed = str;
       } else {
-        done();
-        return;
+        // delete `str` from `elem`
+        if (endsWith(curr, str + opts.postfix)) {
+          count = str.length + postFixLen;
+        } else {
+          count = 0;
+        }
       }
-    } else {
-      // delete entire contents of `elem`
-      count = curr.length;
+    }
+    if (count === 0) {
+      done();
+      return;
     }
     d = function(count) {
       window.setTimeout(function() {
@@ -119,12 +138,15 @@ var malarkey = function(elem, opts) {
     *
     * @api public
     */
-  var clear = function() {
-    elem.innerHTML = '';
-    if (opts.loop) {
-      queue(clear);
-    }
-    this();
+  var clear = function(duration) {
+    var done = this;
+    window.setTimeout(function() {
+      elem.innerHTML = '';
+      if (opts.loop) {
+        queue(clear, duration);
+      }
+      done();
+    }, duration);
   };
 
   // expose public API
@@ -136,17 +158,17 @@ var malarkey = function(elem, opts) {
     queue(_delete, str, speed || opts.speed);
     return this;
   };
-  this.pause = function(duration) {
-    queue(pause, duration);
+  this.pause = function(delay) {
+    queue(pause, delay || opts.delay);
     return this;
   };
-  this.clear = function() {
-    queue(clear);
+  this.clear = function(delay) {
+    queue(clear, delay || opts.delay);
     return this;
   };
 
 };
 
 module.exports = exports = function(elem, opts) {
-  return new malarkey(elem, opts);
+  return new malarkey(elem, opts || {});
 };

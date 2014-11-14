@@ -54,7 +54,7 @@ gulp.task('test', ['dist'], function(done) {
 });
 
 gulp.task('watch', defaultTasks, function() {
-  gulp.watch(paths.src, defaultTasks);
+  gulp.watch(paths.src.concat(paths.test, paths.karmaConf), defaultTasks);
 });
 
 gulp.task('default', defaultTasks);

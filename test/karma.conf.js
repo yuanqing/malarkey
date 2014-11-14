@@ -16,18 +16,23 @@ module.exports = function (config) {
     ],
     coverageReporter: {
       type: 'lcov',
-      dir: '../coverage/'
+      dir: 'coverage/'
     },
     preprocessors: {
-      'dist/kontact.min.js': ['coverage']
+      'dist/malarkey.js': ['coverage']
     },
     files: [
       'node_modules/jquery/dist/jquery.min.js',
       'node_modules/jasmine-jquery/lib/jasmine-jquery.js',
       'node_modules/sinon/pkg/sinon-1.11.1.js',
-      'dist/malarkey.min.js',
+      'dist/malarkey.js',
       'test/spec/malarkey.spec.js',
-      {pattern: 'test/fixture/fixture.html', watched: false, included: false, served: true}
+      {
+        pattern: 'test/fixture/fixture.html',
+        included: false,
+        served: true,
+        watched: false
+      }
     ]
   });
 };
