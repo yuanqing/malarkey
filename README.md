@@ -1,4 +1,4 @@
-# Malarkey.js [![npm Version](http://img.shields.io/npm/v/malarkey.svg?style=flat)](https://www.npmjs.org/package/malarkey)
+# Malarkey.js [![npm Version](http://img.shields.io/npm/v/malarkey.svg?style=flat)](https://www.npmjs.org/package/malarkey) [![Build Status](https://img.shields.io/travis/yuanqing/malarkey.svg?style=flat)](https://travis-ci.org/yuanqing/malarkey)
 
 > Simulate a typewriter/ticker effect on a DOM element.
 
@@ -29,29 +29,44 @@ Initialises the typewriter/ticker effect on `elem` with the given `opts` setting
 
 - `elem` is a DOM element.
 
-- `opts` is an object literal. Settings include:
-  - `speed` &mdash; Number of milliseconds to type or delete a single character. Defaults to `100`.
+- `opts` is an object literal. The keys are:
   - `loop` &mdash; Whether to repeat the entire sequence. Defaults to `false`.
-  - `postfix` &mdash; This is appended to all strings passed to the `type` method. Defaults to `''`.
+  - `speed` &mdash; The time in milliseconds to `type` or `delete` a single character. Defaults to `50`.
+  - `delay` &mdash; The delay in milliseconds for the `pause` and `clear` method. Defaults to `50`.
+  - `postfix` &mdash; This is the string that is appended to the `str` passed to `type` and `delete`. Defaults to the empty string.
 
 ### malarkey.type(str [, speed])
 
-Types the given `str`. If specified, `speed` (in milliseconds) overrides `opts.speed`.
+Types the `str` at the given `speed` (in milliseconds).
 
-### malarkey.delete(str [, speed])
+- `speed` &mdash; defaults to `opts.speed`.
 
-- If `str` is a number, at most that many characters are deleted from the DOM element.
-- Otherwise, if the last string typed ends with `str`, then said `str` is deleted from the DOM element.
+### malarkey.delete([str, speed])
 
-If specified, `speed` (in milliseconds) overrides `opts.speed`.
+Deletes the `str` at the given `speed` (in milliseconds).
 
-### malarkey.pause(duration)
+- `str` &mdash; If specified, deletes `str` from `elem` if and only if the last string that was typed ends with `str`. Otherwise, deletes the entire contents of `elem`.
+- `speed` &mdash; Defaults to `opts.speed`.
 
-Do nothing for the given `duration` (in milliseconds).
+### malarkey.pause([delay])
 
-### malarkey.clear()
+Do nothing for `delay` (in milliseconds).
 
-Clears the contents of the DOM element.
+- `delay` &mdash; Defaults to `opts.delay`.
+
+### malarkey.clear([delay])
+
+Clears the contents of the DOM element after a `delay` (in milliseconds).
+
+- `delay` &mdash; Defaults to `opts.delay`.
+
+## Installation
+
+Install via [npm](https://www.npmjs.org/package/malarkey):
+
+```bash
+$ npm i --save malarkey
+```
 
 ## License
 
