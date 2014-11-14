@@ -1,4 +1,4 @@
-# Malarkey.js
+# Malarkey.js [![npm Version](http://img.shields.io/npm/v/malarkey.svg?style=flat)](https://www.npmjs.org/package/malarkey)
 
 > Simulate a typewriter/ticker effect on a DOM element.
 
