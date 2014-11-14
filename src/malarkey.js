@@ -122,7 +122,7 @@ var malarkey = function(elem, opts) {
   var clear = function() {
     elem.innerHTML = '';
     if (opts.loop) {
-      queue(clear); // add identical call to `queue`
+      queue(clear);
     }
     this();
   };
