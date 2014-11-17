@@ -195,19 +195,37 @@ describe('malarkey(elem, opts)', function() {
 
   describe('clear(delay)', function() {
 
-    it('clear contents after a delay', function() {
-      var delay = defaultDelay * 10;
+    it('clear contents', function() {
       var str = 'foo';
       malarkey(elem)
         .type(str)
-        .clear(delay);
+        .pause()
+        .clear();
       expectElem('');
       // type
       expectTyping(str, defaultSpeed);
       expectElem(str);
       // clear
-      clock.tick(delay);
+      clock.tick(defaultDelay);
       expectElem('');
+    });
+
+  });
+
+  describe('call(fn)', function() {
+
+    it('call function', function() {
+
+      var str = 'foo';
+      var fn = jasmine.createSpy('fn');
+      malarkey(elem).type(str).call(fn);
+      expectElem('');
+      // type
+      expect(fn).not.toHaveBeenCalled();
+      expectTyping(str, defaultSpeed);
+      expectElem(str);
+      expect(fn).toHaveBeenCalledWith(elem);
+
     });
 
   });
@@ -220,7 +238,7 @@ describe('malarkey(elem, opts)', function() {
       postfix: 'bar'
     };
     var str = 'foo';
-    var i = 10;
+    var i = 1;
     var typeSpeed = 20 * defaultSpeed;
     var pauseDelay = 30 * defaultDelay;
     var delSpeed = 40 * defaultSpeed;
@@ -229,6 +247,7 @@ describe('malarkey(elem, opts)', function() {
       .pause(pauseDelay)
       .delete(str, delSpeed)
       .type(str)
+      .pause(pauseDelay)
       .clear();
     expectElem('');
     while (i--) {
@@ -245,7 +264,7 @@ describe('malarkey(elem, opts)', function() {
       expectTyping(str + opts.postfix, opts.speed);
       expectElem(str + opts.postfix);
       // clear
-      clock.tick(opts.delay);
+      clock.tick(pauseDelay);
       expectElem('');
     }
   });

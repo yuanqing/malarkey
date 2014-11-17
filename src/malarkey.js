@@ -4,7 +4,7 @@ var segue = require('segue');
 
 var malarkey = function(elem, opts) {
 
-  // set `opts` to defaults if needed
+  // defaults
   opts.speed = opts.speed || 50;
   opts.delay = opts.delay || 50;
   opts.loop = opts.loop || false;
@@ -13,7 +13,7 @@ var malarkey = function(elem, opts) {
   // cache `postfix` length
   var postfixLen = opts.postfix.length;
 
-  // initialise the function queue
+  // initialise the function `queue`
   var queue = segue();
 
   /**
@@ -135,20 +135,15 @@ var malarkey = function(elem, opts) {
   };
 
   /**
-    * Clears the contents of the DOM element after a `delay`.
+    * Clears the contents of `elem`.
     *
-    * @param {Number} delay Time in milliseconds
     * @api public
     */
-  var clear = function(delay) {
-    var done = this;
-    window.setTimeout(function() {
-      elem.innerHTML = '';
-      if (opts.loop) {
-        queue(clear, delay);
-      }
-      done();
-    }, delay);
+  var clear = function() {
+    elem.innerHTML = '';
+    if (opts.loop) {
+      queue(clear);
+    }
   };
 
   // expose public API
@@ -164,8 +159,12 @@ var malarkey = function(elem, opts) {
     queue(pause, delay || opts.delay);
     return this;
   };
-  this.clear = function(delay) {
-    queue(clear, delay || opts.delay);
+  this.clear = function() {
+    queue(clear);
+    return this;
+  };
+  this.call = function(fn) {
+    queue(fn, elem);
     return this;
   };
 
