@@ -1,11 +1,11 @@
 'use strict';
 
+var del = require('del');
 var gulp = require('gulp');
 var browserify = require('gulp-browserify');
 var jshint = require('gulp-jshint');
 var plumber = require('gulp-plumber');
 var rename = require('gulp-rename');
-var rimraf = require('gulp-rimraf');
 var uglify = require('gulp-uglify');
 var karma = require('karma').server;
 
@@ -26,10 +26,8 @@ gulp.task('lint', function() {
     .pipe(jshint.reporter('jshint-stylish'));
 });
 
-gulp.task('clean', function() {
-  return gulp.src([paths.coverage, paths.dist], { read: false })
-    .pipe(plumber())
-    .pipe(rimraf());
+gulp.task('clean', function (cb) {
+  del([paths.coverage, paths.dist], cb);
 });
 
 gulp.task('dist', ['clean'], function() {
