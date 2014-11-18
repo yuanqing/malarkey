@@ -54,7 +54,7 @@ var malarkey = function(elem, opts) {
       return done();
     }
     var t = function(i) {
-      window.setTimeout(function() {
+      setTimeout(function() {
         elem.innerHTML += str[i];
         i += 1;
         if (i < len) {
@@ -99,7 +99,7 @@ var malarkey = function(elem, opts) {
       return done();
     }
     d = function(count) {
-      window.setTimeout(function() {
+      setTimeout(function() {
         var curr = elem.innerHTML;
         if (count) {
           elem.innerHTML = curr.substring(0, curr.length-1); // drop last char
@@ -122,10 +122,12 @@ var malarkey = function(elem, opts) {
     */
   var clear = function() {
     elem.innerHTML = '';
-    if (opts.loop) {
-      queue(clear);
-    }
     this();
+    if (opts.loop) {
+      setTimeout(function() {
+        queue(clear);
+      }, 0);
+    }
   };
 
   /**
@@ -136,7 +138,7 @@ var malarkey = function(elem, opts) {
     */
   var pause = function(delay) {
     var done = this;
-    window.setTimeout(function() {
+    setTimeout(function() {
       if (opts.loop) {
         queue(pause, delay);
       }
@@ -153,10 +155,12 @@ var malarkey = function(elem, opts) {
   var call = function(fn) {
     var done = this;
     var cb = function() {
-      if (opts.loop) {
-        queue(call, fn);
-      }
       done();
+      if (opts.loop) {
+        setTimeout(function() {
+          queue(call, fn);
+        }, 0);
+      }
     };
     fn.call(cb, elem);
   };

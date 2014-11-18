@@ -5,7 +5,7 @@ var fixture = 'fixture.html';
 jasmine.getFixtures().fixturesPath = 'base/test/fixture/';
 jasmine.getFixtures().preload(fixture);
 
-describe('malarkey(elem, opts)', function() {
+describe('malarkey(elem [, opts])', function() {
 
   var elem;
   var clock;
