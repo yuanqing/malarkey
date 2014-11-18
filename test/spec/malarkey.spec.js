@@ -12,7 +12,7 @@ describe('malarkey(elem, opts)', function() {
 
   var defaultTypeSpeed = 50;
   var defaultDeleteSpeed = 50;
-  var defaultPauseDelay = 500;
+  var defaultPauseDelay = 2000;
 
   var expectElem = function(str) {
     expect(elem.innerHTML).toBe(str);
@@ -222,13 +222,16 @@ describe('malarkey(elem, opts)', function() {
 
   describe('call(fn)', function() {
 
-    it('calls the given `fn`', function() {
+    it('calls the given `fn` with `elem`', function() {
       var str = 'foo';
-      var fn = jasmine.createSpy('fn');
+      var fn = jasmine.createSpy('fn').and.callFake(function() {
+        this();
+      });
       malarkey(elem)
         .type(str)
         .pause()
-        .call(fn);
+        .call(fn)
+        .type(str);
       expectElem('');
       // type
       expectTyping(str, defaultTypeSpeed);
@@ -238,6 +241,8 @@ describe('malarkey(elem, opts)', function() {
       clock.tick(defaultPauseDelay);
       // call
       expect(fn).toHaveBeenCalledWith(elem);
+      // type
+      expectTyping(str, defaultTypeSpeed);
     });
 
   });

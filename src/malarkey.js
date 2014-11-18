@@ -8,7 +8,7 @@ var malarkey = function(elem, opts) {
   opts.loop = opts.loop || false;
   opts.typeSpeed = opts.typeSpeed || 50;
   opts.deleteSpeed = opts.deleteSpeed || 50;
-  opts.pauseDelay = opts.pauseDelay || 500;
+  opts.pauseDelay = opts.pauseDelay || 2000;
   opts.postfix = opts.postfix || '';
 
   // cache `postfix` length
@@ -145,7 +145,7 @@ var malarkey = function(elem, opts) {
   };
 
   /**
-    * Call the given `fn` with `elem` as the first argument.
+    * Invokes the given `fn`, passing in `elem` as the first argument.
     *
     * @param {Function} fn
     * @api public
