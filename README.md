@@ -4,7 +4,7 @@
 
 ## Features
 
-1. [Friendly, flexible API](#API)
+1. [Friendly, flexible API](#api)
 2. Vanilla JavaScript, and therefore super lightweight (~2.4 KB [minified](https://github.com/yuanqing/malarkey/blob/master/dist/malarkey.min.js), or ~1.1 KB minified and gzipped)
 
 ## Usage
