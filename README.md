@@ -2,7 +2,14 @@
 
 > Simulate a typewriter/ticker effect on a DOM element.
 
+## Features
+
+1. [Friendly, flexible API](#API)
+2. Vanilla JavaScript, and therefore super lightweight (2.3 KB [minified](https://github.com/yuanqing/malarkey/blob/master/dist/malarkey.min.js), 1.1 KB gzipped)
+
 ## Usage
+
+Boom:
 
 ```html
 <body>
@@ -65,7 +72,7 @@ Do nothing for `delay` (in milliseconds).
 
 Invokes the given `fn`, passing in `elem` as the first argument.
 
-- `fn` &mdash; Can be asynchronous. Call `this()` within this function to signal that it has finished execution.
+- `fn` &mdash; Can be asynchronous. Call `this()` within the function to signal that it has finished execution.
 
 ## Installation
 
