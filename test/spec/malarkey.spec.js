@@ -64,7 +64,7 @@ describe('malarkey(elem [, opts])', function() {
       expectElem(str);
     });
 
-    it('types `str` at a custom speed', function() {
+    it('types `str` at the custom `speed`', function() {
       var str = 'foo';
       var customSpeed = defaultTypeSpeed * 10;
       malarkey(elem)
@@ -104,7 +104,7 @@ describe('malarkey(elem [, opts])', function() {
       expectElem('');
     });
 
-    it('deletes entire contents at a custom speed', function() {
+    it('deletes entire contents at the custom `speed`', function() {
       var typeStr = 'foobar';
       var customSpeed = defaultDeleteSpeed * 10;
       malarkey(elem)
@@ -134,7 +134,7 @@ describe('malarkey(elem [, opts])', function() {
       expectElem('foo');
     });
 
-    it('deletes `str` at a custom speed', function() {
+    it('deletes `str` at the custom `speed`', function() {
       var typeStr = 'foobar';
       var str = 'bar';
       var customSpeed = defaultDeleteSpeed * 10;
@@ -203,7 +203,7 @@ describe('malarkey(elem [, opts])', function() {
       expectElem(str);
     });
 
-    it('pauses typing for a custom delay', function() {
+    it('pauses typing for the custom `delay`', function() {
       var str = 'foo';
       var customDelay = defaultPauseDelay * 10;
       malarkey(elem)
