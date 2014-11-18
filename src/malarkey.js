@@ -5,9 +5,10 @@ var segue = require('segue');
 var malarkey = function(elem, opts) {
 
   // defaults
-  opts.speed = opts.speed || 50;
-  opts.delay = opts.delay || 50;
   opts.loop = opts.loop || false;
+  opts.typeSpeed = opts.typeSpeed || 50;
+  opts.deleteSpeed = opts.deleteSpeed || 50;
+  opts.pauseDelay = opts.pauseDelay || 500;
   opts.postfix = opts.postfix || '';
 
   // cache `postfix` length
@@ -49,15 +50,13 @@ var malarkey = function(elem, opts) {
   var type = function(str, speed) {
     var done = this;
     var len = str.length;
-    var i = 0;
     if (len === 0) {
-      done();
-      return;
+      return done();
     }
-    var t = function() {
+    var t = function(i) {
       window.setTimeout(function() {
         elem.innerHTML += str[i];
-        i = i + 1;
+        i += 1;
         if (i < len) {
           t(i);
         } else {
@@ -68,15 +67,14 @@ var malarkey = function(elem, opts) {
         }
       }, speed);
     };
-    t();
+    t(0);
   };
 
   /**
     * Deletes the `str` at the given `speed`.
     *
-    * @param {String} str If specified, deletes `str` from `elem` if and only if
-    * the last string that was typed ends with `str`, else deletes the entire
-    * contents of `elem`
+    * @param {String} str If specified, deletes `str` from `elem` if the last string
+    * that was typed ends with `str`, else deletes the entire contents of `elem`
     * @param {Number} speed Time in milliseconds to type a single character
     * @api public
     */
@@ -98,8 +96,7 @@ var malarkey = function(elem, opts) {
       }
     }
     if (count === 0) {
-      done();
-      return;
+      return done();
     }
     d = function(count) {
       window.setTimeout(function() {
@@ -119,6 +116,19 @@ var malarkey = function(elem, opts) {
   };
 
   /**
+    * Clears the contents of `elem`.
+    *
+    * @api public
+    */
+  var clear = function() {
+    elem.innerHTML = '';
+    if (opts.loop) {
+      queue(clear);
+    }
+    this();
+  };
+
+  /**
     * Do nothing for `delay`.
     *
     * @param {Number} delay Time in milliseconds
@@ -135,36 +145,41 @@ var malarkey = function(elem, opts) {
   };
 
   /**
-    * Clears the contents of `elem`.
+    * Call the given `fn` with `elem` as the first argument.
     *
+    * @param {Function} fn
     * @api public
     */
-  var clear = function() {
-    elem.innerHTML = '';
-    if (opts.loop) {
-      queue(clear);
-    }
+  var call = function(fn) {
+    var done = this;
+    var cb = function() {
+      if (opts.loop) {
+        queue(call, fn);
+      }
+      done();
+    };
+    fn.call(cb, elem);
   };
 
   // expose public API
   this.type = function(str, speed) {
-    queue(type, str + opts.postfix, speed || opts.speed);
+    queue(type, str + opts.postfix, speed || opts.typeSpeed);
     return this;
   };
   this.delete = function(str, speed) {
-    queue(_delete, str, speed || opts.speed);
-    return this;
-  };
-  this.pause = function(delay) {
-    queue(pause, delay || opts.delay);
+    queue(_delete, str, speed || opts.deleteSpeed);
     return this;
   };
   this.clear = function() {
     queue(clear);
     return this;
   };
+  this.pause = function(delay) {
+    queue(pause, delay || opts.pauseDelay);
+    return this;
+  };
   this.call = function(fn) {
-    queue(fn, elem);
+    queue(call, fn);
     return this;
   };
 
