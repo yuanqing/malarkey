@@ -1,6 +1,6 @@
 {
   "name": "malarkey",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simulate a typewriter/ticker effect on a DOM element.",
   "keywords": [
     "animate",

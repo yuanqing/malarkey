@@ -49,14 +49,14 @@ Initialises the typewriter/ticker effect on `elem` with the given `opts` setting
 
 Types the `str` at the given `speed` (milliseconds per character).
 
-- `speed` &mdash; Defaults to `opts.speed`.
+- `speed` &mdash; Defaults to `opts.typeSpeed`.
 
 ### malarkey.delete([str, speed])
 
 Deletes the `str` at the given `speed` (milliseconds per character).
 
 - `str` &mdash; If specified, deletes `str` from `elem` if the last string that was typed ends with `str`. Otherwise, deletes the entire contents of `elem`.
-- `speed` &mdash; Defaults to `opts.speed`.
+- `speed` &mdash; Defaults to `opts.deleteSpeed`.
 
 ### malarkey.clear()
 
@@ -66,7 +66,7 @@ Clears the contents of `elem`.
 
 Do nothing for `delay` (in milliseconds).
 
-- `delay` &mdash; Defaults to `opts.delay`.
+- `delay` &mdash; Defaults to `opts.pauseDelay`.
 
 ### malarkey.call(fn)
 
