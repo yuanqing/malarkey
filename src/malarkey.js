@@ -71,25 +71,28 @@ var malarkey = function(elem, opts) {
   };
 
   /**
-    * Deletes the `str` at the given `speed`.
+    * Deletes `str` or `n` number of characters at the given `speed`.
     *
-    * @param {String} str If specified, deletes `str` from `elem` if the last string
-    * that was typed ends with `str`, else deletes the entire contents of `elem`
+    * @param {String|Number} arg If `null` or `-1`, deletes entire contents of `elem`.
+    * Else if number, deletes `arg` number of characters from `elem`. Else deletes
+    * `arg` from `elem` if and only if the last string that was typed ends with `arg`.
     * @param {Number} speed Time in milliseconds to type a single character
     * @api public
     */
-  var _delete = function(str, speed) {
+  var _delete = function(arg, speed) {
     var done = this;
     var curr = elem.innerHTML;
     var count = curr.length; // default to deleting entire contents of `elem`
     var d;
-    if (typeof str !== 'undefined') {
-      if (isInteger(str)) {
-        speed = str;
-      } else {
-        // delete `str` from `elem`
-        if (endsWith(curr, str + opts.postfix)) {
-          count = str.length + postfixLen;
+    if (typeof arg !== 'undefined' && arg !== null) {
+      if (isInteger(arg)) {
+        if (arg > -1) {
+          count = arg > count ? count : arg;
+        }
+      } else { // assumes `arg` is String
+        // delete `arg` from `elem` if the last string typed ends with `arg`
+        if (endsWith(curr, arg + opts.postfix)) {
+          count = arg.length + postfixLen;
         } else {
           count = 0;
         }
@@ -106,7 +109,7 @@ var malarkey = function(elem, opts) {
           d(count - 1);
         } else {
           if (opts.loop) {
-            queue(_delete, str, speed);
+            queue(_delete, arg, speed);
           }
           done();
         }
@@ -170,8 +173,8 @@ var malarkey = function(elem, opts) {
     queue(type, str + opts.postfix, speed || opts.typeSpeed);
     return this;
   };
-  this.delete = function(str, speed) {
-    queue(_delete, str, speed || opts.deleteSpeed);
+  this.delete = function(arg, speed) {
+    queue(_delete, arg, speed || opts.deleteSpeed);
     return this;
   };
   this.clear = function() {

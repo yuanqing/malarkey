@@ -5,7 +5,7 @@
 ## Features
 
 1. [Friendly, flexible API](#api)
-2. Vanilla JavaScript, and therefore super lightweight (~2.4 KB [minified](https://github.com/yuanqing/malarkey/blob/master/dist/malarkey.min.js), or ~1.1 KB minified and gzipped)
+2. Vanilla JavaScript, and therefore super lightweight (~2.5 KB [minified](https://github.com/yuanqing/malarkey/blob/master/dist/malarkey.min.js), or ~1.1 KB minified and gzipped)
 
 ## Usage
 
@@ -51,11 +51,22 @@ Types the `str` at the given `speed` (milliseconds per character).
 
 - `speed` &mdash; Defaults to `opts.typeSpeed`.
 
-### malarkey.delete([str, speed])
+### malarkey.delete()
+
+Deletes the entire contents of `elem` at the default speed.
+
+### malarkey.delete(str [, speed])
 
 Deletes the `str` at the given `speed` (milliseconds per character).
 
-- `str` &mdash; If specified, deletes `str` from `elem` if the last string that was typed ends with `str`. Otherwise, deletes the entire contents of `elem`.
+- `str` &mdash; If `null`, deletes the entire contents of `elem`. Else deletes `str` from `elem` if and only if the last string that was typed ends with `str`.
+- `speed` &mdash; Defaults to `opts.deleteSpeed`.
+
+### malarkey.delete(n [, speed])
+
+Deletes `n` characters at the given `speed` (milliseconds per character).
+
+- `str` &mdash; If `-1`, deletes the entire contents of `elem`. Else deletes the last `n` characters from `elem`.
 - `speed` &mdash; Defaults to `opts.deleteSpeed`.
 
 ### malarkey.clear()
@@ -72,7 +83,7 @@ Do nothing for `delay` (in milliseconds).
 
 Invokes the given `fn`, passing in `elem` as the first argument.
 
-- `fn` &mdash; Can be asynchronous. Call `this()` within the function to signal that it has finished execution.
+- `fn` &mdash; This can be an asynchronous function. Must call `this()` within the function to signal that it has finished execution.
 
 ## Installation
 
