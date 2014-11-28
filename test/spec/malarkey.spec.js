@@ -1,9 +1,11 @@
-/* globals malarkey, jasmine, describe, beforeEach, afterEach, it, expect, loadFixtures, sinon, $ */
+/* globals jasmine, describe, beforeEach, afterEach, it, expect, loadFixtures, sinon, $ */
 'use strict';
 
 var fixture = 'fixture.html';
 jasmine.getFixtures().fixturesPath = 'base/test/fixture/';
 jasmine.getFixtures().preload(fixture);
+
+var malarkey = require('../../src/malarkey.js');
 
 describe('malarkey(elem [, opts])', function() {
 
@@ -90,7 +92,7 @@ describe('malarkey(elem [, opts])', function() {
 
   describe('delete()', function() {
 
-    it('deletes entire contents at the default speed', function() {
+    it('deletes contents of `elem` at the default speed', function() {
       var typeStr = 'foobar';
       malarkey(elem)
         .type(typeStr)
@@ -108,7 +110,7 @@ describe('malarkey(elem [, opts])', function() {
 
   describe('delete(str [, speed])', function() {
 
-    it('deletes entire contents at a custom `speed`', function() {
+    it('deletes contents of `elem` at a custom `speed`', function() {
       var typeStr = 'foobar';
       var customSpeed = defaultDeleteSpeed * 10;
       malarkey(elem)
@@ -240,7 +242,7 @@ describe('malarkey(elem [, opts])', function() {
 
   describe('clear()', function() {
 
-    it('clears entire contents of `elem`', function() {
+    it('clears contents of `elem`', function() {
       var str = 'foo';
       malarkey(elem)
         .type(str)

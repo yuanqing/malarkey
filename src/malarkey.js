@@ -15,7 +15,7 @@ var malarkey = function(elem, opts) {
   var postfixLen = opts.postfix.length;
 
   // initialise the function `queue`
-  var queue = segue();
+  var queue = segue(opts.loop);
 
   /**
     * Check if `obj` is an integer.
@@ -60,9 +60,6 @@ var malarkey = function(elem, opts) {
         if (i < len) {
           t(i);
         } else {
-          if (opts.loop) {
-            queue(type, str, speed);
-          }
           done();
         }
       }, speed);
@@ -108,9 +105,6 @@ var malarkey = function(elem, opts) {
           elem.innerHTML = curr.substring(0, curr.length-1); // drop last char
           d(count - 1);
         } else {
-          if (opts.loop) {
-            queue(_delete, arg, speed);
-          }
           done();
         }
       }, speed);
@@ -126,11 +120,6 @@ var malarkey = function(elem, opts) {
   var clear = function() {
     elem.innerHTML = '';
     this();
-    if (opts.loop) {
-      setTimeout(function() {
-        queue(clear);
-      }, 0);
-    }
   };
 
   /**
@@ -142,9 +131,6 @@ var malarkey = function(elem, opts) {
   var pause = function(delay) {
     var done = this;
     setTimeout(function() {
-      if (opts.loop) {
-        queue(pause, delay);
-      }
       done();
     }, delay);
   };
@@ -159,11 +145,6 @@ var malarkey = function(elem, opts) {
     var done = this;
     var cb = function() {
       done();
-      if (opts.loop) {
-        setTimeout(function() {
-          queue(call, fn);
-        }, 0);
-      }
     };
     fn.call(cb, elem);
   };
