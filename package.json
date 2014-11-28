@@ -15,7 +15,7 @@
     "type": "git",
     "url": "git://github.com/yuanqing/malarkey.git"
   },
-  "main": "src/malarkey.js",
+  "main": "dist/malarkey.min.js",
   "devDependencies": {
     "browserify-istanbul": "^0.1.2",
     "del": "^0.1.3",

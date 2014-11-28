@@ -17,7 +17,7 @@ var paths = {
   test: ['test/*.spec.js']
 };
 
-var defaultTasks = ['lint', 'test'];
+var defaultTasks = ['clean', 'lint', 'test'];
 
 gulp.task('lint', function() {
   return gulp.src(paths.src.concat(paths.test, paths.karmaConf, __filename))
@@ -26,11 +26,11 @@ gulp.task('lint', function() {
     .pipe(jshint.reporter('jshint-stylish'));
 });
 
-gulp.task('clean', function (cb) {
-  del([paths.coverage, paths.dist], cb);
+gulp.task('clean', function() { // synchronous
+  del([paths.coverage, paths.dist]);
 });
 
-gulp.task('dist', ['clean'], function() {
+gulp.task('dist', function() {
   return gulp.src(paths.src, { read: false })
     .pipe(plumber())
     .pipe(browserify({
@@ -38,6 +38,7 @@ gulp.task('dist', ['clean'], function() {
       insertGlobals: false,
       standalone: 'malarkey'
     }))
+    .pipe(rename({ basename: 'malarkey' }))
     .pipe(gulp.dest(paths.dist))
     .pipe(rename({ suffix: '.min' }))
     .pipe(uglify())
