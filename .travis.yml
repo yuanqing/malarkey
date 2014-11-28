@@ -6,3 +6,7 @@ node_js:
 
 script:
   - ./node_modules/.bin/gulp
+
+after_success:
+  - npm i coveralls
+  - cat ./coverage/*/lcov.info | ./node_modules/.bin/coveralls

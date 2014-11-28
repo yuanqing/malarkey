@@ -1,11 +1,9 @@
-# Malarkey.js [![npm Version](http://img.shields.io/npm/v/malarkey.svg?style=flat)](https://www.npmjs.org/package/malarkey) [![Build Status](https://img.shields.io/travis/yuanqing/malarkey.svg?style=flat)](https://travis-ci.org/yuanqing/malarkey)
+# Malarkey.js [![npm Version](http://img.shields.io/npm/v/malarkey.svg?style=flat)](https://www.npmjs.org/package/malarkey) [![Build Status](https://img.shields.io/travis/yuanqing/malarkey.svg?style=flat)](https://travis-ci.org/yuanqing/malarkey) [![Coverage Status](https://img.shields.io/coveralls/yuanqing/malarkey.svg?style=flat)](https://coveralls.io/r/yuanqing/malarkey)
 
 > Simulate a typewriter/ticker effect on a DOM element.
 
-## Features
-
-1. [Friendly, flexible API](#api)
-2. Vanilla JavaScript, and therefore super lightweight (~2.5 KB [minified](https://github.com/yuanqing/malarkey/blob/master/dist/malarkey.min.js), or ~1.1 KB minified and gzipped)
+- [Friendly, flexible API](#api)
+- Super lightweight; 2.5 KB [minified](https://github.com/yuanqing/malarkey/blob/master/dist/malarkey.min.js), or 1.1 KB minified and gzipped
 
 ## Usage
 
@@ -53,20 +51,20 @@ Types the `str` at the given `speed` (milliseconds per character).
 
 ### malarkey.delete()
 
-Deletes the entire contents of `elem` at the default speed.
+Deletes the contents of `elem` at the default speed.
 
 ### malarkey.delete(str [, speed])
 
 Deletes the `str` at the given `speed` (milliseconds per character).
 
-- `str` &mdash; If `null`, deletes the entire contents of `elem`. Else deletes `str` from `elem` if and only if the last string that was typed ends with `str`.
+- `str` &mdash; A string, or `null`. If `null`, deletes the entire contents of `elem`. Else deletes `str` from `elem` if and only if the last string that was typed ends with `str`.
 - `speed` &mdash; Defaults to `opts.deleteSpeed`.
 
 ### malarkey.delete(n [, speed])
 
 Deletes `n` characters at the given `speed` (milliseconds per character).
 
-- `str` &mdash; If `-1`, deletes the entire contents of `elem`. Else deletes the last `n` characters from `elem`.
+- `str` &mdash; An integer. If `-1`, deletes the entire contents of `elem`. Else deletes the last `n` characters from `elem`.
 - `speed` &mdash; Defaults to `opts.deleteSpeed`.
 
 ### malarkey.clear()
