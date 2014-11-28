@@ -100,7 +100,7 @@ $ bower i --save yuanqing/malarkey
 ## Changelog
 
 - 1.1.1
-  - Use Segue v0.2.0
+  - Use [Segue](https://github.com/yuanqing/segue) v0.2.0
 - 1.1.0
   - Restore ability to `delete` by number of characters
 - 1.0.0
