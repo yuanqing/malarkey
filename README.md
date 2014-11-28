@@ -64,7 +64,7 @@ Deletes the `str` at the given `speed` (milliseconds per character).
 
 Deletes `n` characters at the given `speed` (milliseconds per character).
 
-- `str` &mdash; An integer. If `-1`, deletes the entire contents of `elem`. Else deletes the last `n` characters from `elem`.
+- `n` &mdash; An integer. If `-1`, deletes the entire contents of `elem`. Else deletes the last `n` characters from `elem`.
 - `speed` &mdash; Defaults to `opts.deleteSpeed`.
 
 ### malarkey.clear()
@@ -89,6 +89,12 @@ Install via [npm](https://www.npmjs.org/package/malarkey):
 
 ```bash
 $ npm i --save malarkey
+```
+
+Install via Bower:
+
+```bash
+$ bower i --save yuanqing/malarkey
 ```
 
 ## License
