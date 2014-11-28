@@ -97,6 +97,19 @@ Install via Bower:
 $ bower i --save yuanqing/malarkey
 ```
 
+## Changelog
+
+- 1.1.1
+  - Use Segue v0.2.0
+- 1.1.0
+  - Restore ability to `delete` by number of characters
+- 1.0.0
+  - Add `opts.typeSpeed` and `opts.deleteSpeed` in place of `opts.speed`
+  - Rename `opts.delay` to `opts.pauseDelay`
+  - Remove `delete(n)`
+- 0.0.1
+  - Initial release
+
 ## License
 
 [MIT license](https://github.com/yuanqing/malarkey/blob/master/LICENSE)
