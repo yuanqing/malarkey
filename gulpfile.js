@@ -13,8 +13,8 @@ var paths = {
   coverage: 'coverage/',
   dist: 'dist/',
   karmaConf: __dirname + '/test/karma.conf.js',
-  src: ['src/*.js'],
-  test: ['test/spec/**/*.spec.js']
+  src: ['index.js'],
+  test: ['test/*.spec.js']
 };
 
 var defaultTasks = ['lint', 'test'];

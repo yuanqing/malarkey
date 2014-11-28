@@ -2,10 +2,10 @@
 'use strict';
 
 var fixture = 'fixture.html';
-jasmine.getFixtures().fixturesPath = 'base/test/fixture/';
+jasmine.getFixtures().fixturesPath = 'base/test/';
 jasmine.getFixtures().preload(fixture);
 
-var malarkey = require('../../src/malarkey.js');
+var malarkey = require('../index.js');
 
 describe('malarkey(elem [, opts])', function() {
 

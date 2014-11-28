@@ -21,7 +21,7 @@ module.exports = function(config) {
       dir: 'coverage/'
     },
     preprocessors: {
-      'test/**/*.spec.js': ['browserify']
+      'test/*.spec.js': ['browserify']
     },
     browserify: {
       transform: [
@@ -38,9 +38,9 @@ module.exports = function(config) {
       'node_modules/jquery/dist/jquery.min.js',
       'node_modules/jasmine-jquery/lib/jasmine-jquery.js',
       'node_modules/sinon/pkg/sinon-1.11.1.js',
-      'test/**/*.spec.js',
+      'test/*.spec.js',
       {
-        pattern: 'test/fixture/fixture.html',
+        pattern: 'test/fixture.html',
         included: false,
         served: true,
         watched: false
