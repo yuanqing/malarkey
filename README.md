@@ -7,7 +7,7 @@
 
 ## Usage
 
-Boom:
+> [**Editable demo on JSFiddle**](http://jsfiddtle.net/yoyjoLhx/)
 
 ```html
 <body>

@@ -21,7 +21,7 @@ module.exports = function(config) {
       subdir: '.',
       reporters: [
         { type: 'lcov' },
-        { type: 'text' },
+        { type: 'text' }
       ]
     },
     preprocessors: {
