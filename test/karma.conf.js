@@ -18,7 +18,10 @@ module.exports = function(config) {
     ],
     coverageReporter: {
       type: 'lcov',
-      dir: 'coverage/'
+      dir: 'coverage/',
+      reporters: [
+        { type: 'lcov', subdir: '.' },
+      ]
     },
     preprocessors: {
       'test/*.spec.js': ['browserify']
