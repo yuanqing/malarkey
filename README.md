@@ -7,7 +7,7 @@
 
 ## Usage
 
-> [**Editable demo on JSFiddle**](http://jsfiddtle.net/yoyjoLhx/)
+> [**Editable demo on JSFiddle**](http://jsfiddle.net/yoyjoLhx/)
 
 ```html
 <body>
