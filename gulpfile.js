@@ -9,18 +9,20 @@ var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
 var karma = require('karma').server;
 
+var moduleName = 'malarkey';
+
 var paths = {
   coverage: 'coverage/',
   dist: 'dist/',
-  karmaConf: __dirname + '/test/karma.conf.js',
+  karmaConf: __dirname + '/karma.conf.js',
   src: ['index.js'],
   test: ['test/*.spec.js']
 };
 
-var defaultTasks = ['clean', 'lint', 'test'];
+var defaultTasks = ['lint', 'test'];
 
 gulp.task('lint', function() {
-  return gulp.src(paths.src.concat(paths.test, paths.karmaConf, __filename))
+  return gulp.src([].concat(__filename, paths.karmaConf, paths.src, paths.test))
     .pipe(plumber())
     .pipe(jshint())
     .pipe(jshint.reporter('jshint-stylish'));
@@ -30,30 +32,30 @@ gulp.task('clean', function() { // synchronous
   del([paths.coverage, paths.dist]);
 });
 
-gulp.task('dist', function() {
+gulp.task('dist', ['clean'], function() {
   return gulp.src(paths.src, { read: false })
     .pipe(plumber())
     .pipe(browserify({
-      debug: true, // generate sourcemap
+      debug: true, // generate sourcemaps
       insertGlobals: false,
-      standalone: 'malarkey'
+      standalone: moduleName
     }))
-    .pipe(rename({ basename: 'malarkey' }))
+    .pipe(rename({ basename: moduleName }))
     .pipe(gulp.dest(paths.dist))
     .pipe(rename({ suffix: '.min' }))
     .pipe(uglify())
     .pipe(gulp.dest(paths.dist));
 });
 
-gulp.task('test', ['dist'], function(done) {
+gulp.task('test', ['dist'], function(cb) {
   karma.start({
     configFile: paths.karmaConf,
     singleRun: true
-  }, done);
+  }, cb);
 });
 
 gulp.task('watch', defaultTasks, function() {
-  gulp.watch(paths.src.concat(paths.test, paths.karmaConf), defaultTasks);
+  gulp.watch([].concat(paths.karmaConf, paths.src, paths.test), defaultTasks);
 });
 
 gulp.task('default', defaultTasks);
