@@ -17,10 +17,11 @@ module.exports = function(config) {
       'spec'
     ],
     coverageReporter: {
-      type: 'lcov',
       dir: 'coverage/',
+      subdir: '.',
       reporters: [
-        { type: 'lcov', subdir: '.' },
+        { type: 'lcov' },
+        { type: 'text' },
       ]
     },
     preprocessors: {
