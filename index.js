@@ -6,9 +6,9 @@ var malarkey = function(elem, opts) {
 
   // defaults
   opts.loop = opts.loop || false;
-  opts.typeSpeed = opts.typeSpeed || 50;
-  opts.deleteSpeed = opts.deleteSpeed || 50;
-  opts.pauseDelay = opts.pauseDelay || 2000;
+  opts.typeSpeed = opts.speed || opts.typeSpeed || 50;
+  opts.deleteSpeed = opts.speed || opts.deleteSpeed || 50;
+  opts.pauseDelay = opts.delay || opts.pauseDelay || 2000;
   opts.postfix = opts.postfix || '';
 
   // cache `postfix` length
