@@ -81,7 +81,7 @@ Do nothing for `delay` (in milliseconds).
 
 Invokes the given `fn`, passing in `elem` as the first argument.
 
-- `fn` &mdash; This can be an asynchronous function. Must call `this()` within the function to signal that it has finished execution.
+- `fn` &mdash; Call `this()` within this function (can be asynchronous) to signal that it has finished execution.
 
 ## Installation
 
