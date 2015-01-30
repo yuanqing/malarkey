@@ -36,7 +36,7 @@
     "sinon": "^1.12.2"
   },
   "dependencies": {
-    "segue": "^0.2.0"
+    "segue": "^1.0.2"
   },
   "scripts": {
     "test": "node_modules/.bin/gulp test"

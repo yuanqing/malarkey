@@ -15,7 +15,7 @@ var malarkey = function(elem, opts) {
   var postfixLen = opts.postfix.length;
 
   // initialise the function `queue`
-  var queue = segue(opts.loop);
+  var queue = segue({ repeat: opts.loop });
 
   /**
     * Check if `obj` is an integer.
@@ -47,8 +47,7 @@ var malarkey = function(elem, opts) {
     * @param {Number} speed Time in milliseconds to type a single character
     * @api public
     */
-  var type = function(str, speed) {
-    var done = this;
+  var type = function(done, str, speed) {
     var len = str.length;
     if (len === 0) {
       return done();
@@ -76,8 +75,7 @@ var malarkey = function(elem, opts) {
     * @param {Number} speed Time in milliseconds to type a single character
     * @api public
     */
-  var _delete = function(arg, speed) {
-    var done = this;
+  var _delete = function(done, arg, speed) {
     var curr = elem.innerHTML;
     var count = curr.length; // default to deleting entire contents of `elem`
     var d;
@@ -117,9 +115,9 @@ var malarkey = function(elem, opts) {
     *
     * @api public
     */
-  var clear = function() {
+  var clear = function(done) {
     elem.innerHTML = '';
-    this();
+    done();
   };
 
   /**
@@ -128,8 +126,7 @@ var malarkey = function(elem, opts) {
     * @param {Number} delay Time in milliseconds
     * @api public
     */
-  var pause = function(delay) {
-    var done = this;
+  var pause = function(done, delay) {
     setTimeout(function() {
       done();
     }, delay);
@@ -141,8 +138,7 @@ var malarkey = function(elem, opts) {
     * @param {Function} fn
     * @api public
     */
-  var call = function(fn) {
-    var done = this;
+  var call = function(done, fn) {
     var cb = function() {
       done();
     };
