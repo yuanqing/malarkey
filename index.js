@@ -2,14 +2,6 @@
 
 var segue = require('segue');
 
-/**
-  * Check if `str` ends with the `suffix`.
-  *
-  * @param {String} str
-  * @param {String} suffix
-  * @return {Boolean}
-  * @api private
-  */
 var endsWith = function(str, suffix) {
   return str.indexOf(suffix, str.length - suffix.length) !== -1;
 };
