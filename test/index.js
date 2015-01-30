@@ -10,36 +10,37 @@ var malarkey = require('../index.js');
 describe('malarkey(elem [, opts])', function() {
 
   var elem;
+  var defaults = {
+    loop: false,
+    typeSpeed: 50,
+    deleteSpeed: 50,
+    pauseDelay: 2000,
+    postFix: ''
+  };
+
   var clock;
 
-  var defaultTypeSpeed = 50;
-  var defaultDeleteSpeed = 50;
-  var defaultPauseDelay = 2000;
-
-  var expectElem = function(str) {
+  var expectContents = function(str) {
     expect(elem.innerHTML).toBe(str);
   };
 
   var expectTyping = function(str, speed) {
-    var curr;
-    var i;
+    var i = -1;
     var len = str.length;
-    for (i = 0; i < len; ++i) {
-      curr = elem.innerHTML;
+    while (++i < len) {
+      var curr = elem.innerHTML;
       clock.tick(speed);
-      expectElem(curr + str[i]);
+      expectContents(curr + str[i]);
     }
   };
 
   var expectDeletion = function(str, speed) {
-    var curr;
-    var i;
-    var len = str.length;
-    for (i = len-1; i >= 0; --i) {
-      curr = elem.innerHTML;
+    var i = str.length;
+    while (i-- > 0) {
+      var curr = elem.innerHTML;
       expect(curr[curr.length-1]).toBe(str[i]); // character to be deleted
       clock.tick(speed);
-      expectElem(curr.substring(0, curr.length-1));
+      expectContents(curr.substring(0, curr.length-1));
     }
     clock.tick(speed);
   };
@@ -58,72 +59,70 @@ describe('malarkey(elem [, opts])', function() {
   describe('type(str [, speed])', function() {
 
     it('types `str` at the default speed', function() {
-      var str = 'foo';
       malarkey(elem)
-        .type(str);
-      expectElem('');
+        .type('foobar');
+      expectContents('');
       // type
-      expectTyping(str, defaultTypeSpeed);
-      expectElem(str);
+      expectTyping('foobar', defaults.typeSpeed);
+      expectContents('foobar');
     });
 
-    it('types `str` at a custom `speed`', function() {
-      var str = 'foo';
-      var customSpeed = defaultTypeSpeed * 10;
-      malarkey(elem)
-        .type(str, customSpeed);
-      expectElem('');
-      // type
-      expectTyping(str, customSpeed);
-      expectElem(str);
-    });
-
-    it('does not type if empty `str`', function() {
-      var str = 'foo';
+    it('does nothing if `str` is an empty string', function() {
       malarkey(elem)
         .type('') // ignored
-        .type(str);
-      expectElem('');
+        .type('foobar');
+      expectContents('');
       // type
-      expectTyping(str, defaultTypeSpeed);
-      expectElem(str);
+      expectTyping('foobar', defaults.typeSpeed);
+      expectContents('foobar');
+    });
+
+    it('types `str` at a custom speed', function() {
+      var str = 'foobar';
+      var customSpeed = defaults.typeSpeed * 10;
+      malarkey(elem)
+        .type(str, customSpeed);
+      expectContents('');
+      // type
+      expectTyping(str, customSpeed);
+      expectContents(str);
     });
 
   });
 
   describe('delete()', function() {
 
-    it('deletes contents of `elem` at the default speed', function() {
+    it('deletes every character in `elem` at the default speed', function() {
       var typeStr = 'foobar';
       malarkey(elem)
         .type(typeStr)
         .delete();
-      expectElem('');
+      expectContents('');
       // type
-      expectTyping(typeStr, defaultTypeSpeed);
-      expectElem(typeStr);
+      expectTyping(typeStr, defaults.typeSpeed);
+      expectContents(typeStr);
       // delete
-      expectDeletion(typeStr, defaultDeleteSpeed);
-      expectElem('');
+      expectDeletion(typeStr, defaults.deleteSpeed);
+      expectContents('');
     });
 
   });
 
   describe('delete(str [, speed])', function() {
 
-    it('deletes contents of `elem` at a custom `speed`', function() {
+    it('deletes every character in `elem` at a custom speed', function() {
       var typeStr = 'foobar';
-      var customSpeed = defaultDeleteSpeed * 10;
+      var customSpeed = defaults.deleteSpeed * 10;
       malarkey(elem)
         .type(typeStr)
         .delete(null, customSpeed);
-      expectElem('');
+      expectContents('');
       // type
-      expectTyping(typeStr, defaultTypeSpeed);
-      expectElem(typeStr);
+      expectTyping(typeStr, defaults.typeSpeed);
+      expectContents(typeStr);
       // delete
       expectDeletion(typeStr, customSpeed);
-      expectElem('');
+      expectContents('');
     });
 
     it('deletes `str` at the default speed', function() {
@@ -132,29 +131,13 @@ describe('malarkey(elem [, opts])', function() {
       malarkey(elem)
         .type(typeStr)
         .delete(str);
-      expectElem('');
+      expectContents('');
       // type
-      expectTyping(typeStr, defaultTypeSpeed);
-      expectElem(typeStr);
+      expectTyping(typeStr, defaults.typeSpeed);
+      expectContents(typeStr);
       // delete
-      expectDeletion(str, defaultDeleteSpeed);
-      expectElem('foo');
-    });
-
-    it('deletes `str` at a custom `speed`', function() {
-      var typeStr = 'foobar';
-      var str = 'bar';
-      var customSpeed = defaultDeleteSpeed * 10;
-      malarkey(elem)
-        .type(typeStr)
-        .delete(str, customSpeed);
-      expectElem('');
-      // type
-      expectTyping(typeStr, defaultTypeSpeed);
-      expectElem(typeStr);
-      // delete
-      expectDeletion(str, customSpeed);
-      expectElem('foo');
+      expectDeletion(str, defaults.deleteSpeed);
+      expectContents('foo');
     });
 
     it('does nothing if `elem` does not end with `str`', function() {
@@ -163,13 +146,29 @@ describe('malarkey(elem [, opts])', function() {
       malarkey(elem)
         .type(typeStr)
         .delete(str);
-      expectElem('');
+      expectContents('');
       // type
-      expectTyping(typeStr, defaultTypeSpeed);
-      expectElem(typeStr);
+      expectTyping(typeStr, defaults.typeSpeed);
+      expectContents(typeStr);
       // delete
-      clock.tick(defaultDeleteSpeed);
-      expectElem(typeStr);
+      clock.tick(defaults.deleteSpeed * str.length);
+      expectContents(typeStr);
+    });
+
+    it('deletes `str` at a custom speed', function() {
+      var typeStr = 'foobar';
+      var str = 'bar';
+      var customSpeed = defaults.deleteSpeed * 10;
+      malarkey(elem)
+        .type(typeStr)
+        .delete(str, customSpeed);
+      expectContents('');
+      // type
+      expectTyping(typeStr, defaults.typeSpeed);
+      expectContents(typeStr);
+      // delete
+      expectDeletion(str, customSpeed);
+      expectContents('foo');
     });
 
   });
@@ -183,28 +182,27 @@ describe('malarkey(elem [, opts])', function() {
         malarkey(elem)
           .type(typeStr)
           .delete(-1);
-        expectElem('');
+        expectContents('');
         // type
-        expectTyping(typeStr, defaultTypeSpeed);
-        expectElem(typeStr);
+        expectTyping(typeStr, defaults.typeSpeed);
+        expectContents(typeStr);
         // delete
-        expectDeletion(typeStr, defaultDeleteSpeed);
-        expectElem('');
+        expectDeletion(typeStr, defaults.deleteSpeed);
+        expectContents('');
       });
 
       it('`n` < number of characters in `elem`', function() {
         var typeStr = 'foobar';
-        var str = 'bar';
         malarkey(elem)
           .type(typeStr)
-          .delete(str.length);
-        expectElem('');
+          .delete(3);
+        expectContents('');
         // type
-        expectTyping(typeStr, defaultTypeSpeed);
-        expectElem(typeStr);
+        expectTyping(typeStr, defaults.typeSpeed);
+        expectContents(typeStr);
         // delete
-        expectDeletion(str, defaultDeleteSpeed);
-        expectElem('foo');
+        expectDeletion('bar', defaults.deleteSpeed);
+        expectContents('foo');
       });
 
       it('`n` > number of characters in `elem`', function() {
@@ -212,31 +210,30 @@ describe('malarkey(elem [, opts])', function() {
         malarkey(elem)
           .type(typeStr)
           .delete(100);
-        expectElem('');
+        expectContents('');
         // type
-        expectTyping(typeStr, defaultTypeSpeed);
-        expectElem(typeStr);
+        expectTyping(typeStr, defaults.typeSpeed);
+        expectContents(typeStr);
         // delete
-        expectDeletion(typeStr, defaultDeleteSpeed);
-        expectElem('');
+        expectDeletion(typeStr, defaults.deleteSpeed);
+        expectContents('');
       });
 
     });
 
     it('deletes `n` characters at a custom speed', function() {
       var typeStr = 'foobar';
-      var str = 'bar';
-      var customSpeed = defaultDeleteSpeed * 10;
+      var customSpeed = defaults.deleteSpeed * 10;
       malarkey(elem)
         .type(typeStr)
-        .delete(str.length, customSpeed);
-      expectElem('');
+        .delete(3, customSpeed);
+      expectContents('');
       // type
-      expectTyping(typeStr, defaultTypeSpeed);
-      expectElem(typeStr);
+      expectTyping(typeStr, defaults.typeSpeed);
+      expectContents(typeStr);
       // delete
-      expectDeletion(str, customSpeed);
-      expectElem('foo');
+      expectDeletion('bar', customSpeed);
+      expectContents('foo');
     });
 
   });
@@ -244,79 +241,75 @@ describe('malarkey(elem [, opts])', function() {
   describe('clear()', function() {
 
     it('clears contents of `elem`', function() {
-      var str = 'foo';
+      var str = 'foobar';
       malarkey(elem)
         .type(str)
         .pause()
         .clear();
-      expectElem('');
+      expectContents('');
       // type
-      expectTyping(str, defaultTypeSpeed);
-      expectElem(str);
+      expectTyping(str, defaults.typeSpeed);
+      expectContents(str);
       // pause
-      clock.tick(defaultPauseDelay);
+      clock.tick(defaults.pauseDelay);
       // clear
-      expectElem('');
+      expectContents('');
     });
 
   });
 
   describe('pause([delay])', function() {
 
-    it('pauses typing for the default delay', function() {
-      var str = 'foo';
+    it('does nothing for the default delay', function() {
+      var str = 'foobar';
       malarkey(elem)
         .pause()
         .type(str);
-      expectElem('');
+      expectContents('');
       // pause
-      clock.tick(defaultPauseDelay);
-      expectElem('');
+      clock.tick(defaults.pauseDelay);
+      expectContents('');
       // type
-      expectTyping(str, defaultTypeSpeed);
-      expectElem(str);
+      expectTyping(str, defaults.typeSpeed);
+      expectContents(str);
     });
 
-    it('pauses typing for the custom `delay`', function() {
-      var str = 'foo';
-      var customDelay = defaultPauseDelay * 10;
+    it('does nothing for a custom delay', function() {
+      var str = 'foobar';
+      var customDelay = defaults.pauseDelay * 10;
       malarkey(elem)
         .pause(customDelay)
         .type(str);
-      expectElem('');
+      expectContents('');
       // pause
       clock.tick(customDelay);
-      expectElem('');
+      expectContents('');
       // type
-      expectTyping(str, defaultTypeSpeed);
-      expectElem(str);
+      expectTyping(str, defaults.typeSpeed);
+      expectContents(str);
     });
 
   });
 
   describe('call(fn)', function() {
 
-    it('calls the given `fn` with `elem`', function() {
-      var str = 'foo';
+    it('calls the given `fn`, passing it `elem`', function() {
       var fn = jasmine.createSpy('fn').and.callFake(function() {
         this();
       });
+      var str = 'foobar';
       malarkey(elem)
-        .type(str)
         .pause()
         .call(fn)
         .type(str);
-      expectElem('');
-      // type
-      expectTyping(str, defaultTypeSpeed);
-      expectElem(str);
+      expectContents('');
       // pause
       expect(fn).not.toHaveBeenCalled();
-      clock.tick(defaultPauseDelay);
+      clock.tick(defaults.pauseDelay);
       // call
       expect(fn).toHaveBeenCalledWith(elem);
       // type
-      expectTyping(str, defaultTypeSpeed);
+      expectTyping(str, defaults.typeSpeed);
     });
 
   });
@@ -324,41 +317,45 @@ describe('malarkey(elem [, opts])', function() {
   it('complex sequence with `opts`', function() {
     var opts = {
       loop: true,
-      typeSpeed: 10 * defaultTypeSpeed,
-      deleteSpeed: 10 * defaultDeleteSpeed,
-      pauseDelay: 10 * defaultPauseDelay,
-      postfix: 'bar'
+      typeSpeed: 10 * defaults.typeSpeed,
+      deleteSpeed: 10 * defaults.deleteSpeed,
+      pauseDelay: 10 * defaults.pauseDelay,
+      postfix: 'qux'
     };
-    var str = 'foo';
-    var i = 3;
-    var customTypeSpeed = 20 * defaultTypeSpeed;
-    var customDeleteSpeed = 20 * defaultDeleteSpeed;
-    var customPauseDelay = 20 * defaultPauseDelay;
+    var str = 'foobar';
+    var customTypeSpeed = 20 * defaults.typeSpeed;
+    var customDeleteSpeed = 20 * defaults.deleteSpeed;
+    var customPauseDelay = 20 * defaults.pauseDelay;
+    var i = 3; // repeat
     malarkey(elem, opts)
       .type(str, customTypeSpeed)
-      .pause(customPauseDelay)
       .delete(str, customDeleteSpeed)
+      .pause(customPauseDelay)
       .type(str)
+      .delete('bar')
       .pause()
       .clear();
-    expectElem('');
+    expectContents('');
     while (i--) {
       // type
       expectTyping(str + opts.postfix, customTypeSpeed);
-      expectElem(str + opts.postfix);
-      // pause
-      clock.tick(customPauseDelay);
-      expectElem(str + opts.postfix);
+      expectContents(str + opts.postfix);
       // delete
       expectDeletion(str + opts.postfix, customDeleteSpeed);
-      expectElem('');
+      expectContents('');
+      // pause
+      clock.tick(customPauseDelay);
+      expectContents('');
       // type
       expectTyping(str + opts.postfix, opts.typeSpeed);
-      expectElem(str + opts.postfix);
+      expectContents(str + opts.postfix);
+      // delete
+      expectDeletion('bar' + opts.postfix, opts.deleteSpeed);
+      expectContents('foo');
       // pause
       clock.tick(opts.pauseDelay);
       // clear
-      expectElem('');
+      expectContents('');
     }
   });
 
