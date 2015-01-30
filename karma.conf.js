@@ -25,7 +25,7 @@ module.exports = function(config) {
       ]
     },
     preprocessors: {
-      'test/*.spec.js': ['browserify']
+      'test/*.js': ['browserify']
     },
     browserify: {
       transform: [
@@ -41,7 +41,7 @@ module.exports = function(config) {
     files: [
       'node_modules/jquery/dist/jquery.min.js',
       'node_modules/jasmine-jquery/lib/jasmine-jquery.js',
-      'test/*.spec.js',
+      'test/*.js',
       {
         pattern: 'test/fixture.html',
         included: false,
