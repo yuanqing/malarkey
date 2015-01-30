@@ -14,16 +14,16 @@ var malarkey = function(elem, opts) {
   }
 
   // default `opts`
-  opts.loop = opts.loop || false;
   opts.typeSpeed = opts.speed || opts.typeSpeed || 50;
   opts.deleteSpeed = opts.speed || opts.deleteSpeed || 50;
   opts.pauseDelay = opts.delay || opts.pauseDelay || 2000;
   opts.postfix = opts.postfix || '';
 
   // initialise the function queue
-  var queue = segue({ repeat: opts.loop });
+  var queue = segue({ repeat: opts.loop || false });
 
-  // internal functions that are added into `queue` via public methods
+  // internal functions that are added into `queue` via their respective
+  // public methods
   var _type = function(done, str, speed) {
     var len = str.length;
     if (len === 0) {
@@ -46,13 +46,14 @@ var malarkey = function(elem, opts) {
     var count = curr.length; // default to deleting entire contents of `elem`
     if (x != null) {
       if (typeof x === 'string') {
-        // delete `x` from `elem` if the last string typed ends with `x`
+        // delete the string `x` if and only if `elem` ends with `x`
         if (endsWith(curr, x + opts.postfix)) {
           count = x.length + opts.postfix.length;
         } else {
           count = 0;
         }
-      } else { // assume `x` is an integer
+      } else {
+        // delete the last `x` characters from `elem`
         if (x > -1) {
           count = Math.min(x, count);
         }
@@ -84,62 +85,23 @@ var malarkey = function(elem, opts) {
     fn.call(done, elem);
   };
 
-  /**
-    * Types the `str` at the given `speed`.
-    *
-    * @param {String} str
-    * @param {Number} speed Time in milliseconds to type a single character
-    * @api public
-    */
+  // expose public api
   this.type = function(str, speed) {
     queue(_type, str + opts.postfix, speed || opts.typeSpeed);
     return this;
   };
-
-  /**
-    * Deletes characters from `elem` (one character at a time) at the
-    * given `speed`.
-    *
-    * @param {String|Number} x If `null` or `-1`, deletes the contents of
-    * `elem`. If a string, deletes the string if and only if `elem` ends with
-    * said string. Else if an integer, deletes that many characters from the
-    * `elem`.
-    * @param {Number} speed Time in milliseconds to delete a single character
-    * @api public
-    */
   this.delete = function(x, speed) {
     queue(_delete, x, speed || opts.deleteSpeed);
     return this;
   };
-
-  /**
-    * Clear the contents of `elem`.
-    *
-    * @api public
-    */
   this.clear = function() {
     queue(_clear);
     return this;
   };
-
-  /**
-    * Do nothing for `delay`.
-    *
-    * @param {Number} delay Time in milliseconds
-    * @api public
-    */
   this.pause = function(delay) {
     queue(_pause, delay || opts.pauseDelay);
     return this;
   };
-
-  /**
-    * Invoke the given `fn`, passing it `elem` as the first argument.
-    *
-    * @param {Function} fn Invoke `this` within this function to signal that it
-    * has finished execution.
-    * @api public
-    */
   this.call = function(fn) {
     queue(_call, fn);
     return this;
