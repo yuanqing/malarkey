@@ -3,11 +3,11 @@
 > Simulate a typewriter/ticker effect on a DOM element.
 
 - [Friendly, flexible API](#api)
-- Super lightweight; 2.5 KB [minified](https://github.com/yuanqing/malarkey/blob/master/dist/malarkey.min.js), or 1.1 KB minified and gzipped
+- Super lightweight; 2.3 KB [minified](https://github.com/yuanqing/malarkey/blob/master/dist/malarkey.min.js), or 1.1 KB minified and gzipped
 
 ## Usage
 
-> [**Editable demo on JSFiddle**](http://jsfiddle.net/yoyjoLhx/)
+> [**Editable demo**](http://jsfiddle.net/yoyjoLhx/)
 
 ```html
 <body>
@@ -34,64 +34,64 @@
 
 Initialises the typewriter/ticker effect on `elem` with the given `opts` settings.
 
-- `elem` is a DOM element.
+- `elem` &mdash; A DOM element.
 
-- `opts` is an object literal. Settings are:
+- `opts` &mdash; Settings are:
   - `loop` &mdash; Whether to repeat the entire sequence. Defaults to `false`.
   - `typeSpeed` &mdash; Time in milliseconds to `type` a single character. Defaults to `50`.
   - `deleteSpeed` &mdash; Time in milliseconds to `delete` a single character. Defaults to `50`.
   - `pauseDelay` &mdash; Delay in milliseconds to `pause`. Defaults to `2000`.
-  - `postfix` &mdash; This is appended to the `str` passed to `type` and `delete`. Defaults to the empty string.
+  - `postfix` &mdash; A string that is appended to the `str` that is passed to `type` and `delete`. Defaults to the empty string.
 
 ### malarkey.type(str [, speed])
 
-Types the `str` at the given `speed` (milliseconds per character).
+Type the `str` at the given `speed`.
 
 - `speed` &mdash; Defaults to `opts.typeSpeed`.
 
 ### malarkey.delete()
 
-Deletes the contents of `elem` at the default speed.
+Delete the contents of `elem`, one character at a time, at the default speed.
 
 ### malarkey.delete(str [, speed])
 
-Deletes the `str` at the given `speed` (milliseconds per character).
+Delete the given `str`, one character at a time, at the given `speed`.
 
-- `str` &mdash; A string, or `null`. If `null`, deletes the entire contents of `elem`. Else deletes `str` from `elem` if and only if the last string that was typed ends with `str`.
+- `str` &mdash; `null`, or a string. If `null`, deletes every character in `elem`. Else deletes `str` from `elem` if and only if `elem` ends with `str`.
 - `speed` &mdash; Defaults to `opts.deleteSpeed`.
 
 ### malarkey.delete(n [, speed])
 
-Deletes `n` characters at the given `speed` (milliseconds per character).
+Delete the last `n` characters of `elem`, one character at a time, at the given `speed`.
 
-- `n` &mdash; An integer. If `-1`, deletes the entire contents of `elem`. Else deletes the last `n` characters from `elem`.
+- `n` &mdash; An integer. If `-1`, deletes every character in `elem`. Else deletes the last `n` characters of `elem`.
 - `speed` &mdash; Defaults to `opts.deleteSpeed`.
 
 ### malarkey.clear()
 
-Clears the contents of `elem`.
+Clear the contents of `elem`.
 
 ### malarkey.pause([delay])
 
-Do nothing for `delay` (in milliseconds).
+Do nothing for `delay`.
 
 - `delay` &mdash; Defaults to `opts.pauseDelay`.
 
 ### malarkey.call(fn)
 
-Invokes the given `fn`, passing in `elem` as the first argument.
+Call the given asynchronous `fn`, passing it `elem` as the first argument.
 
-- `fn` &mdash; Call `this()` within this function (can be asynchronous) to signal that it has finished execution.
+- `fn` &mdash; Call `this` within this function to signal that it has finished execution.
 
 ## Installation
 
-Install via [npm](https://www.npmjs.org/package/malarkey):
+Install via [npm](https://npmjs.com/):
 
 ```bash
 $ npm i --save malarkey
 ```
 
-Install via Bower:
+Install via [Bower](http://bower.io/):
 
 ```bash
 $ bower i --save yuanqing/malarkey
