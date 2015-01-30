@@ -1,4 +1,4 @@
-/* globals jasmine, describe, beforeEach, afterEach, it, expect, loadFixtures, sinon, $ */
+/* globals jasmine, describe, beforeEach, afterEach, it, expect, loadFixtures, $ */
 'use strict';
 
 var fixture = 'fixture.html';
@@ -47,11 +47,12 @@ describe('malarkey(elem [, opts])', function() {
   beforeEach(function() {
     loadFixtures(fixture);
     elem = $('.malarkey')[0];
-    clock = sinon.useFakeTimers();
+    jasmine.clock().install();
+    clock = jasmine.clock();
   });
 
   afterEach(function() {
-    clock.restore();
+    jasmine.clock().uninstall();
   });
 
   describe('type(str [, speed])', function() {

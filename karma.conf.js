@@ -41,7 +41,6 @@ module.exports = function(config) {
     files: [
       'node_modules/jquery/dist/jquery.min.js',
       'node_modules/jasmine-jquery/lib/jasmine-jquery.js',
-      'node_modules/sinon/pkg/sinon-1.12.2.js',
       'test/*.spec.js',
       {
         pattern: 'test/fixture.html',
