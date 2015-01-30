@@ -4,7 +4,6 @@ var del = require('del');
 var gulp = require('gulp');
 var browserify = require('gulp-browserify');
 var jshint = require('gulp-jshint');
-var plumber = require('gulp-plumber');
 var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
 var karma = require('karma').server;
@@ -23,7 +22,6 @@ var defaultTasks = ['lint', 'test'];
 
 gulp.task('lint', function() {
   return gulp.src([].concat(__filename, paths.karmaConf, paths.src, paths.test))
-    .pipe(plumber())
     .pipe(jshint())
     .pipe(jshint.reporter('jshint-stylish'));
 });
@@ -34,7 +32,6 @@ gulp.task('clean', function() { // synchronous
 
 gulp.task('dist', ['clean'], function() {
   return gulp.src(paths.src, { read: false })
-    .pipe(plumber())
     .pipe(browserify({
       debug: true, // generate sourcemaps
       insertGlobals: false,

@@ -21,7 +21,6 @@
     "gulp": "^3.8.10",
     "gulp-browserify": "^0.5.1",
     "gulp-jshint": "^1.9.0",
-    "gulp-plumber": "^0.6.6",
     "gulp-rename": "^1.2.0",
     "gulp-uglify": "^1.1.0",
     "jasmine-jquery": "^2.0.6",
