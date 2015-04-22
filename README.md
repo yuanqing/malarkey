@@ -42,6 +42,8 @@ Initialises the typewriter/ticker effect on `elem` with the given `opts` setting
   - `deleteSpeed` &mdash; Time in milliseconds to `delete` a single character. Defaults to `50`.
   - `pauseDelay` &mdash; Delay in milliseconds to `pause`. Defaults to `2000`.
   - `postfix` &mdash; A string that is appended to the `str` that is passed to `type` and `delete`. Defaults to the empty string.
+  - `valueGetter` &mdash; Function used to get the current element value. Defaults to `function(el) { return el.innerHTML; }`).
+  - `valueSetter` &mdash; Function used to set the value to the element. Defaults to `function(el, value) { el.innerHTML = value; }`).
 
 ### malarkey.type(str [, speed])
 
@@ -99,6 +101,8 @@ $ bower i --save yuanqing/malarkey
 
 ## Changelog
 
+- 1.1.6
+  - Add `opts.valueGetter` and `opts.valueSetter` to make it trivial to apply the effect to different element properties (ie. input placeholder, etc.)
 - 1.1.1
   - Use [Segue](https://github.com/yuanqing/segue) v0.2.0
 - 1.1.0
