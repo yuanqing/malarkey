@@ -28,9 +28,39 @@
 </body>
 ```
 
+By default, the effect is applied on `elem.innerHTML`. To apply it on other element properties (such as the `placeholder` attribute of an `input` element), pass in `opts.getter` and `opts.setter`, like so:
+
+> [**Editable demo**](http://jsfiddle.net/qu88jvb9/)
+
+```html
+<body>
+  <input type="text" class="malarkey">
+  <script src="dist/malarkey.min.js"></script>
+  <script>
+    var elem = document.querySelectorAll('.malarkey')[0];
+    var attr = 'placeholder';
+    var opts = {
+      loop: true,
+      getter: function(elem) {
+        return elem.getAttribute(attr) || '';
+      },
+      setter: function(elem, val) {
+        elem.setAttribute(attr, val);
+      }
+    };
+    malarkey(elem, opts).type('Say hello')   .pause().delete()
+                        .type('Wave goodbye').pause().delete();
+  </script>
+</body>
+```
+
 ## API
 
-### malarkey(elem [, opts])
+```js
+var malarkey = require('malarkey');
+```
+
+### var m = malarkey(elem [, opts])
 
 Initialises the typewriter/ticker effect on `elem` with the given `opts` settings.
 
@@ -42,44 +72,44 @@ Initialises the typewriter/ticker effect on `elem` with the given `opts` setting
   - `deleteSpeed` &mdash; Time in milliseconds to `delete` a single character. Defaults to `50`.
   - `pauseDelay` &mdash; Delay in milliseconds to `pause`. Defaults to `2000`.
   - `postfix` &mdash; A string that is appended to the `str` that is passed to `type` and `delete`. Defaults to the empty string.
-  - `valueGetter` &mdash; Function used to get the current element value. Defaults to `function(el) { return el.innerHTML; }`).
-  - `valueSetter` &mdash; Function used to set the value to the element. Defaults to `function(el, value) { el.innerHTML = value; }`).
+  - `getter` &mdash; A function to get the current value of `elem`. Defaults to `function(elem) { return elem.innerHTML; }`.
+  - `setter` &mdash; A function to assign a new value to `elem`. Defaults to `function(elem, val) { elem.innerHTML = val; }`.
 
-### malarkey.type(str [, speed])
+### m.type(str [, speed])
 
 Type the `str` at the given `speed`.
 
 - `speed` &mdash; Defaults to `opts.typeSpeed`.
 
-### malarkey.delete()
+### m.delete()
 
 Delete the contents of `elem`, one character at a time, at the default speed.
 
-### malarkey.delete(str [, speed])
+### m.delete(str [, speed])
 
 Delete the given `str`, one character at a time, at the given `speed`.
 
 - `str` &mdash; `null`, or a string. If `null`, deletes every character in `elem`. Else deletes `str` from `elem` if and only if `elem` ends with `str`.
 - `speed` &mdash; Defaults to `opts.deleteSpeed`.
 
-### malarkey.delete(n [, speed])
+### m.delete(n [, speed])
 
 Delete the last `n` characters of `elem`, one character at a time, at the given `speed`.
 
 - `n` &mdash; An integer. If `-1`, deletes every character in `elem`. Else deletes the last `n` characters of `elem`.
 - `speed` &mdash; Defaults to `opts.deleteSpeed`.
 
-### malarkey.clear()
+### m.clear()
 
 Clear the contents of `elem`.
 
-### malarkey.pause([delay])
+### m.pause([delay])
 
 Do nothing for `delay`.
 
 - `delay` &mdash; Defaults to `opts.pauseDelay`.
 
-### malarkey.call(fn)
+### m.call(fn)
 
 Call the given asynchronous `fn`, passing it `elem` as the first argument.
 
@@ -87,13 +117,13 @@ Call the given asynchronous `fn`, passing it `elem` as the first argument.
 
 ## Installation
 
-Install via [npm](https://npmjs.com/):
+Install via [npm](https://npmjs.com):
 
 ```bash
 $ npm i --save malarkey
 ```
 
-Install via [Bower](http://bower.io/):
+Install via [bower](http://bower.io):
 
 ```bash
 $ bower i --save yuanqing/malarkey
@@ -101,8 +131,8 @@ $ bower i --save yuanqing/malarkey
 
 ## Changelog
 
-- 1.1.6
-  - Add `opts.valueGetter` and `opts.valueSetter` to make it trivial to apply the effect to different element properties (ie. input placeholder, etc.)
+- 1.2.0
+  - Add `opts.getter` and `opts.setter` to allow the effect to be applied on other element properties
 - 1.1.1
   - Use [Segue](https://github.com/yuanqing/segue) v0.2.0
 - 1.1.0
