@@ -18,6 +18,12 @@ var malarkey = function(elem, opts) {
   opts.deleteSpeed = opts.speed || opts.deleteSpeed || 50;
   opts.pauseDelay = opts.delay || opts.pauseDelay || 2000;
   opts.postfix = opts.postfix || '';
+  opts.valueSetter = opts.valueSetter || function(elem, value) {
+    elem.innerHTML = value;
+  };
+  opts.valueGetter = opts.valueGetter || function(elem) {
+    return elem.innerHTML;
+  };
 
   // initialise the function queue
   var queue = segue({ repeat: opts.loop || false });
@@ -31,7 +37,7 @@ var malarkey = function(elem, opts) {
     }
     (function t(i) {
       setTimeout(function() {
-        elem.innerHTML += str[i];
+        opts.valueSetter(elem, opts.valueGetter(elem) + str[i]);
         i += 1;
         if (i < len) {
           t(i);
@@ -42,7 +48,7 @@ var malarkey = function(elem, opts) {
     })(0);
   };
   var _delete = function(done, x, speed) {
-    var curr = elem.innerHTML;
+    var curr = opts.valueGetter(elem);
     var count = curr.length; // default to deleting entire contents of `elem`
     if (x != null) {
       if (typeof x === 'string') {
@@ -64,9 +70,10 @@ var malarkey = function(elem, opts) {
     }
     (function d(count) {
       setTimeout(function() {
-        var curr = elem.innerHTML;
+        var curr = opts.valueGetter(elem);
         if (count) {
-          elem.innerHTML = curr.substring(0, curr.length-1); // drop last char
+          // drop last char
+          opts.valueSetter(elem, curr.substring(0, curr.length-1)); 
           d(count - 1);
         } else {
           done();
@@ -75,7 +82,7 @@ var malarkey = function(elem, opts) {
     })(count);
   };
   var _clear = function(done) {
-    elem.innerHTML = '';
+    opts.valueSetter(elem, '');
     done();
   };
   var _pause = function(done, delay) {
