@@ -21,8 +21,8 @@ var malarkey = function(elem, opts) {
   var getter = opts.getter || function(elem) {
     return elem.innerHTML;
   };
-  var setter = opts.setter || function(elem, value) {
-    elem.innerHTML = value;
+  var setter = opts.setter || function(elem, val) {
+    elem.innerHTML = val;
   };
 
   // initialise the function queue
