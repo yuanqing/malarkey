@@ -14,15 +14,15 @@ var malarkey = function(elem, opts) {
   }
 
   // default `opts`
-  opts.typeSpeed = opts.speed || opts.typeSpeed || 50;
-  opts.deleteSpeed = opts.speed || opts.deleteSpeed || 50;
-  opts.pauseDelay = opts.delay || opts.pauseDelay || 2000;
-  opts.postfix = opts.postfix || '';
-  opts.setter = opts.setter || function(elem, value) {
-    elem.innerHTML = value;
-  };
-  opts.getter = opts.getter || function(elem) {
+  var typeSpeed = opts.speed || opts.typeSpeed || 50;
+  var deleteSpeed = opts.speed || opts.deleteSpeed || 50;
+  var pauseDelay = opts.delay || opts.pauseDelay || 2000;
+  var postfix = opts.postfix || '';
+  var getter = opts.getter || function(elem) {
     return elem.innerHTML;
+  };
+  var setter = opts.setter || function(elem, value) {
+    elem.innerHTML = value;
   };
 
   // initialise the function queue
@@ -37,7 +37,7 @@ var malarkey = function(elem, opts) {
     }
     (function t(i) {
       setTimeout(function() {
-        opts.setter(elem, opts.getter(elem) + str[i]);
+        setter(elem, getter(elem) + str[i]);
         i += 1;
         if (i < len) {
           t(i);
@@ -48,13 +48,13 @@ var malarkey = function(elem, opts) {
     })(0);
   };
   var _delete = function(done, x, speed) {
-    var curr = opts.getter(elem);
+    var curr = getter(elem);
     var count = curr.length; // default to deleting entire contents of `elem`
     if (x != null) {
       if (typeof x === 'string') {
         // delete the string `x` if and only if `elem` ends with `x`
-        if (endsWith(curr, x + opts.postfix)) {
-          count = x.length + opts.postfix.length;
+        if (endsWith(curr, x + postfix)) {
+          count = x.length + postfix.length;
         } else {
           count = 0;
         }
@@ -70,10 +70,10 @@ var malarkey = function(elem, opts) {
     }
     (function d(count) {
       setTimeout(function() {
-        var curr = opts.getter(elem);
+        var curr = getter(elem);
         if (count) {
           // drop last char
-          opts.setter(elem, curr.substring(0, curr.length-1));
+          setter(elem, curr.substring(0, curr.length-1));
           d(count - 1);
         } else {
           done();
@@ -82,7 +82,7 @@ var malarkey = function(elem, opts) {
     })(count);
   };
   var _clear = function(done) {
-    opts.setter(elem, '');
+    setter(elem, '');
     done();
   };
   var _pause = function(done, delay) {
@@ -94,11 +94,11 @@ var malarkey = function(elem, opts) {
 
   // expose public api
   this.type = function(str, speed) {
-    queue(_type, str + opts.postfix, speed || opts.typeSpeed);
+    queue(_type, str + postfix, speed || typeSpeed);
     return this;
   };
   this.delete = function(x, speed) {
-    queue(_delete, x, speed || opts.deleteSpeed);
+    queue(_delete, x, speed || deleteSpeed);
     return this;
   };
   this.clear = function() {
@@ -106,7 +106,7 @@ var malarkey = function(elem, opts) {
     return this;
   };
   this.pause = function(delay) {
-    queue(_pause, delay || opts.pauseDelay);
+    queue(_pause, delay || pauseDelay);
     return this;
   };
   this.call = function(fn) {
