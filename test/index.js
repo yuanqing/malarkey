@@ -15,32 +15,41 @@ describe('malarkey(elem [, opts])', function() {
     typeSpeed: 50,
     deleteSpeed: 50,
     pauseDelay: 2000,
-    postFix: ''
+    postfix: '',
+    getter: function(elem) {
+      return elem.innerHTML;
+    },
+    setter: function(elem, val) {
+      elem.innerHTML = val;
+    }
   };
 
   var clock;
 
-  var expectContents = function(str) {
-    expect(elem.innerHTML).toBe(str);
+  var expectContents = function(str, getter) {
+    getter = getter || defaults.getter;
+    expect(getter(elem)).toBe(str);
   };
 
-  var expectTyping = function(str, speed) {
+  var expectTyping = function(str, speed, getter) {
+    getter = getter || defaults.getter;
     var i = -1;
     var len = str.length;
     while (++i < len) {
-      var curr = elem.innerHTML;
+      var curr = getter(elem);
       clock.tick(speed);
-      expectContents(curr + str[i]);
+      expectContents(curr + str[i], getter);
     }
   };
 
-  var expectDeletion = function(str, speed) {
+  var expectDeletion = function(str, speed, getter) {
+    getter = getter || defaults.getter;
     var i = str.length;
     while (i-- > 0) {
-      var curr = elem.innerHTML;
+      var curr = getter(elem);
       expect(curr[curr.length-1]).toBe(str[i]); // character to be deleted
       clock.tick(speed);
-      expectContents(curr.substring(0, curr.length-1));
+      expectContents(curr.substring(0, curr.length-1), getter);
     }
     clock.tick(speed);
   };
@@ -312,6 +321,25 @@ describe('malarkey(elem [, opts])', function() {
       expectTyping(str, defaults.typeSpeed);
     });
 
+  });
+
+  it('custom `getter` and `setter`', function() {
+    var opts = {
+      getter: function(elem) {
+        return elem.getAttribute('title') || '';
+      },
+      setter: function(elem, val) {
+        elem.setAttribute('title', val);
+      }
+    };
+    var str = 'foobar';
+    malarkey(elem, opts)
+      .type(str)
+      .delete(str);
+    // type
+    expectTyping(str, defaults.typeSpeed, opts.getter);
+    // delete
+    expectDeletion(str, defaults.deleteSpeed, opts.getter);
   });
 
   it('complex sequence with `opts`', function() {
