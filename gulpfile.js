@@ -2,7 +2,6 @@
 
 var del = require('del');
 var gulp = require('gulp');
-var browserify = require('gulp-browserify');
 var jshint = require('gulp-jshint');
 var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
@@ -26,17 +25,12 @@ gulp.task('lint', function() {
     .pipe(jshint.reporter('jshint-stylish'));
 });
 
-gulp.task('clean', function() { // synchronous
-  del([paths.coverage, paths.dist]);
+gulp.task('clean', function(cb) {
+  del([paths.coverage, paths.dist], cb);
 });
 
 gulp.task('dist', ['clean'], function() {
-  return gulp.src(paths.src, { read: false })
-    .pipe(browserify({
-      debug: true, // generate sourcemaps
-      insertGlobals: false,
-      standalone: moduleName
-    }))
+  return gulp.src(paths.src)
     .pipe(rename({ basename: moduleName }))
     .pipe(gulp.dest(paths.dist))
     .pipe(rename({ suffix: '.min' }))
