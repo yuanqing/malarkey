@@ -2,19 +2,21 @@
 
   'use strict';
 
-  var endsWith = function(str, suffix) {
+  function endsWith(str, suffix) {
     return str.indexOf(suffix, str.length - suffix.length) !== -1;
-  };
+  }
 
-  var Malarkey = function(elem, opts) {
+  function Malarkey(elem, opts) {
 
     // allow `Malarkey` to be called without the `new` keyword
     if (!(this instanceof Malarkey)) {
       return new Malarkey(elem, opts);
     }
+    var self = this;
 
     // default `opts`
     opts = opts || {};
+    var loop = opts.loop;
     var typeSpeed = opts.speed || opts.typeSpeed || 50;
     var deleteSpeed = opts.speed || opts.deleteSpeed || 50;
     var pauseDelay = opts.delay || opts.pauseDelay || 2000;
@@ -25,43 +27,40 @@
     var setter = opts.setter || function(elem, val) {
       elem.innerHTML = val;
     };
-    var loop = opts.loop;
 
-    // initialise the function queue
+    // the function queue
     var fnQueue = [];
     var argsQueue = [];
     var i = -1;
     var isRunning = false;
-    var enqueue = function(fn, args) {
+    function enqueue(fn, args) {
       fnQueue.push(fn);
       argsQueue.push(args);
       if (!isRunning) {
         isRunning = true;
-        setTimeout(function() { // wait for remaining functions to be enqueued
+        // wait for the remaining functions to be enqueued
+        setTimeout(function() {
           next();
         }, 0);
       }
-    };
-    var next = function() {
-      i++;
-      if (i === fnQueue.length) {
+      return self;
+    }
+    function next() {
+      if (++i === fnQueue.length) {
         if (!loop) {
           isRunning = false;
           return;
         }
         i = 0;
       }
-      var fn = fnQueue[i];
-      var args = [].concat(next, argsQueue[i]);
-      fn.apply(null, args);
-    };
+      fnQueue[i].apply(null, [].concat(next, argsQueue[i]));
+    }
 
-    // internal functions that are added into `queue` via their respective
-    // public methods
-    var _type = function(done, str, speed) {
+    // internal functions that are `enqueued` via the respective public methods
+    function _type(cb, str, speed) {
       var len = str.length;
-      if (len === 0) {
-        return done();
+      if (!len) {
+        return cb();
       }
       (function t(i) {
         setTimeout(function() {
@@ -70,12 +69,12 @@
           if (i < len) {
             t(i);
           } else {
-            done();
+            cb();
           }
         }, speed);
       })(0);
-    };
-    var _delete = function(done, x, speed) {
+    }
+    function _delete(cb, x, speed) {
       var curr = getter(elem);
       var count = curr.length; // default to deleting entire contents of `elem`
       if (x != null) {
@@ -93,8 +92,8 @@
           }
         }
       }
-      if (count === 0) {
-        return done();
+      if (!count) {
+        return cb();
       }
       (function d(count) {
         setTimeout(function() {
@@ -104,46 +103,37 @@
             setter(elem, curr.substring(0, curr.length-1));
             d(count - 1);
           } else {
-            done();
+            cb();
           }
         }, speed);
       })(count);
-    };
-    var _clear = function(done) {
+    }
+    function _clear(cb) {
       setter(elem, '');
-      done();
-    };
-    var _pause = function(done, delay) {
-      setTimeout(done, delay);
-    };
-    var _call = function(done, fn) {
-      fn.call(done, elem);
-    };
+      cb();
+    }
+    function _call(cb, fn) {
+      fn.call(cb, elem);
+    }
 
-    // expose public api
-    var self = this;
+    // expose the public methods
     self.type = function(str, speed) {
-      enqueue(_type, [str + postfix, speed || typeSpeed]);
-      return this;
+      return enqueue(_type, [str + postfix, speed || typeSpeed]);
     };
     self.delete = function(x, speed) {
-      enqueue(_delete, [x, speed || deleteSpeed]);
-      return this;
+      return enqueue(_delete, [x, speed || deleteSpeed]);
     };
     self.clear = function() {
-      enqueue(_clear, []);
-      return this;
+      return enqueue(_clear);
     };
     self.pause = function(delay) {
-      enqueue(_pause, [delay || pauseDelay]);
-      return this;
+      return enqueue(setTimeout, [delay || pauseDelay]);
     };
     self.call = function(fn) {
-      enqueue(_call, [fn]);
-      return this;
+      return enqueue(_call, [fn]);
     };
 
-  };
+  }
 
   /* istanbul ignore else */
   if (typeof module === 'object') {
