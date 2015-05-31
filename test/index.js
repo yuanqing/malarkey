@@ -1,4 +1,3 @@
-/* globals jasmine, describe, beforeEach, afterEach, it, expect, loadFixtures, $ */
 'use strict';
 
 var fixture = 'fixture.html';

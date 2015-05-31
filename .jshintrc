@@ -14,5 +14,15 @@
   "quotmark": true,
   "undef": true,
   "unused": true,
-  "eqnull": true
+  "eqnull": true,
+  "globals": {
+    "$": true,
+    "jasmine": true,
+    "describe": true,
+    "beforeEach": true,
+    "afterEach": true,
+    "it": true,
+    "expect": true,
+    "loadFixtures": true
+  }
 }

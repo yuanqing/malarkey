@@ -4,7 +4,7 @@
   "version": "1.2.0",
   "homepage": "https://github.com/yuanqing/malarkey",
   "authors": [
-    "Lim Yuan Qing <hello@yuanqing.sg>"
+    "Lim Yuan Qing"
   ],
   "description": "Simulate a typewriter/ticker effect on a DOM element.",
   "license": "MIT",
