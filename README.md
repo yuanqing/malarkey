@@ -4,9 +4,9 @@
 
 ## Features
 
-- [Friendly, flexible API](#api) allowing fine-grained control
-- [Repeat](#usage) the effect indefinitely
-- Apply the effect on a [custom element property](#custom-element-property)
+- [Friendly, flexible API](#api) offering fine-grained control
+- Option to [repeat the effect indefinitely](#usage)
+- Option to apply the effect on a [custom element property](#custom-element-property)
 - Allows [pausing and resuming](#trigger-pause-and-resume) the sequence on-the-fly
 - [Extensive tests](test), with [100% coverage](https://coveralls.io/r/yuanqing/malarkey)
 - No dependencies, and super lightweight; just 1.4 KB [minified](dist/malarkey.min.js), or 0.7 KB minified and gzipped
@@ -38,7 +38,7 @@ For an in-production demo, see [the npm front page](https://npmjs.com).
 
 ### Custom element property
 
-By default, the effect is applied on `elem.innerHTML`. To apply the effect on a different element properties (such as the `placeholder` attribute of an `input` element), pass in `opts.getter` and `opts.setter`, like so:
+By default, the effect is applied on `elem.innerHTML`. To apply the effect on a different element property (such as the `placeholder` attribute of an `input` element), pass in `opts.getter` and `opts.setter`, like so:
 
 > [**Editable demo**](http://jsfiddle.net/qu88jvb9/)
 
@@ -85,7 +85,7 @@ Pausing and resuming the sequence on-the-fly is via the `triggerPause` and `trig
     };
     var m = malarkey(elem, opts).type('Say hello')   .pause().delete()
                                 .type('Wave goodbye').pause().delete();
-    elem.addEventListener('click', function() {
+    document.addEventListener('click', function() {
       if (m.isRunning()) {
         m.triggerPause();
         elem.style.color = 'red';
@@ -98,7 +98,7 @@ Pausing and resuming the sequence on-the-fly is via the `triggerPause` and `trig
 </body>
 ```
 
-Here, click on `elem` to toggle between calling `triggerPause` and `triggerResume`.
+Note that here, we toggle between calling `triggerPause` and `triggerResume` on every `click`.
 
 ## API
 
