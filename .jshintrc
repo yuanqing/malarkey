@@ -4,7 +4,7 @@
   "bitwise": true,
   "camelcase": true,
   "curly": false,
-  "eqeqeq": true,
+  "eqeqeq": false,
   "freeze": true,
   "immed": true,
   "indent": 2,
