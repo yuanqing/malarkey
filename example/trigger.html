@@ -18,7 +18,7 @@
       };
       var m = malarkey(elem, opts).type('Say hello')   .pause().delete()
                                   .type('Wave goodbye').pause().delete();
-      elem.addEventListener('click', function() {
+      document.addEventListener('click', function() {
         if (m.isRunning()) {
           m.triggerPause();
           elem.style.color = 'red';
