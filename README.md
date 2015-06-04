@@ -68,7 +68,7 @@ By default, the effect is applied on `elem.innerHTML`. To apply the effect on a 
 
 To pause and resume the sequence on-the-fly, use the `triggerPause` and `triggerResume` methods:
 
-> [**Editable demo**](http://jsfiddle.net/sqozesav/)
+> [**Editable demo**](http://jsfiddle.net/47peyett/)
 
 ```html
 <body>
