@@ -39,7 +39,7 @@
     var argsQueue = [];
     var i = -1;
     var state = STOPPED;
-    var stopCb = noop;
+    var pauseCb = noop;
     function enqueue(fn, args) {
       fnQueue.push(fn);
       argsQueue.push(args);
@@ -55,8 +55,8 @@
     function next() {
       if (state != RUNNING) {
         state = STOPPED;
-        stopCb(elem);
-        stopCb = noop;
+        pauseCb(elem);
+        pauseCb = noop;
         return;
       }
       if (++i == fnQueue.length) {
@@ -147,10 +147,10 @@
     };
     self.triggerPause = function(cb) {
       state = STOPPING;
-      stopCb = cb || noop;
+      pauseCb = cb || noop;
       return self;
     };
-    self.triggerRun = function() {
+    self.triggerResume = function() {
       if (state != RUNNING) { // ie. `STOPPED` or `STOPPING`
         var prevState = state;
         state = RUNNING;

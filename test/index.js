@@ -375,7 +375,7 @@ describe('malarkey(elem [, opts])', function() {
 
   });
 
-  describe('triggerRun()', function() {
+  describe('triggerResume()', function() {
 
     it('resumes the sequence', function() {
       var m = malarkey(elem)
@@ -393,7 +393,7 @@ describe('malarkey(elem [, opts])', function() {
       expectContents('abc');
       expect(m.isRunning()).toBe(false);
       // trigger run
-      m.triggerRun();
+      m.triggerResume();
       expect(m.isRunning()).toBe(true);
       expectContents('abc');
       // type 'def'
@@ -412,7 +412,7 @@ describe('malarkey(elem [, opts])', function() {
       expectContents('a');
       expect(m.isRunning()).toBe(true);
       // trigger run
-      m.triggerRun();
+      m.triggerResume();
       expect(m.isRunning()).toBe(true);
       // type 'b'
       clock.tick(speed);
@@ -445,7 +445,7 @@ describe('malarkey(elem [, opts])', function() {
       expectContents('ab');
       expect(m.isRunning()).toBe(true);
       // trigger run
-      m.triggerRun();
+      m.triggerResume();
       expect(m.isRunning()).toBe(true);
       // type 'c'
       clock.tick(speed);

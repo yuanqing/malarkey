@@ -150,7 +150,7 @@
       pauseCb = cb || noop;
       return self;
     };
-    self.triggerRun = function() {
+    self.triggerResume = function() {
       if (state != RUNNING) { // ie. `STOPPED` or `STOPPING`
         var prevState = state;
         state = RUNNING;
