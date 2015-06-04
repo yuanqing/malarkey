@@ -2,15 +2,20 @@
 
 > Simulate a typewriter/ticker effect on a DOM element.
 
-- [Friendly, flexible API](#api)
-- No dependencies
-- Super lightweight; just 1.25 KB [minified](dist/malarkey.min.js), or 0.7 KB minified and gzipped
+## Features
 
-For an in-production demo, see [the npm website](https://npmjs.com) and [the relevant source code](https://github.com/npm/newww/blob/master/assets/scripts/what-npm-is-for.js).
+- [Friendly, flexible API](#api) allowing fine-grained control
+- [Repeat](#usage) the effect indefinitely
+- Apply the effect on a [custom element property](#custom-element-property)
+- Allows [pausing and resuming](#trigger-pause-and-resume) the sequence on-the-fly
+- [Extensive tests](test), with [100% coverage](https://coveralls.io/r/yuanqing/malarkey)
+- No dependencies, and super lightweight; just 1.4 KB [minified](dist/malarkey.min.js), or 0.7 KB minified and gzipped
+
+For an in-production demo, see [the npm front page](https://npmjs.com).
 
 ## Usage
 
-> [**Demo**](http://jsfiddle.net/yoyjoLhx/)
+> [**Editable demo**](http://jsfiddle.net/yoyjoLhx/)
 
 ```html
 <body>
@@ -31,9 +36,11 @@ For an in-production demo, see [the npm website](https://npmjs.com) and [the rel
 </body>
 ```
 
-By default, the effect is applied on `elem.innerHTML`. To **apply the effect on other element properties** (such as the `placeholder` attribute of an `input` element), pass in `opts.getter` and `opts.setter`, like so:
+### Custom element property
 
-> [**Demo**](http://jsfiddle.net/qu88jvb9/)
+By default, the effect is applied on `elem.innerHTML`. To apply the effect on other element properties (such as the `placeholder` attribute of an `input` element), pass in `opts.getter` and `opts.setter`, like so:
+
+> [**Editable demo**](http://jsfiddle.net/qu88jvb9/)
 
 ```html
 <body>
@@ -57,11 +64,45 @@ By default, the effect is applied on `elem.innerHTML`. To **apply the effect on 
 </body>
 ```
 
+### Trigger pause and resume
+
+Pausing and resuming the sequence on-the-fly is via the `triggerPause` and `triggerResume` methods.
+
+> [**Editable demo**](http://jsfiddle.net/sqozesav/)
+
+```html
+<body>
+  <div class="malarkey"></div>
+  <script src="../dist/malarkey.min.js"></script>
+  <script>
+    var elem = document.querySelectorAll('.malarkey')[0];
+    var opts = {
+      typeSpeed: 50,
+      deleteSpeed: 50,
+      pauseDelay: 2000,
+      loop: true,
+      postfix: ''
+    };
+    var m = malarkey(elem, opts).type('Say hello')   .pause().delete()
+                                .type('Wave goodbye').pause().delete();
+    elem.addEventListener('click', function() {
+      if (m.isRunning()) {
+        m.triggerPause();
+        elem.style.color = 'red';
+      } else {
+        m.triggerResume();
+        elem.style.color = 'black';
+      }
+    });
+  </script>
+</body>
+```
+
+(Click the element to toggle between calling `triggerPause` and `triggerResume`.)
+
 ## API
 
-In the browser, `malarkey` is attached on the `window` object. (As seen in our examples above.)
-
-In Node, do:
+In the browser, `malarkey` is a global variable (attached on the `window` object). In Node, do:
 
 ```js
 var malarkey = require('malarkey');
@@ -73,14 +114,17 @@ Initialises the typewriter/ticker effect on `elem` with the given `opts` setting
 
 - `elem` &mdash; A DOM element.
 
-- `opts` &mdash; Settings are:
-  - `loop` &mdash; Whether to repeat the entire sequence. Defaults to `false`.
-  - `typeSpeed` &mdash; Time in milliseconds to `type` a single character. Defaults to `50`.
-  - `deleteSpeed` &mdash; Time in milliseconds to `delete` a single character. Defaults to `50`.
-  - `pauseDelay` &mdash; Delay in milliseconds to `pause`. Defaults to `2000`.
-  - `postfix` &mdash; A string that is appended to the `str` that is passed to `type` and `delete`. Defaults to `''`.
-  - `getter` &mdash; A function to get the current value of `elem`. Defaults to `function(elem) { return elem.innerHTML; }`.
-  - `setter` &mdash; A function to assign a new value to `elem`. Defaults to `function(elem, val) { elem.innerHTML = val; }`.
+- `opts` &mdash; An object literal:
+
+  Key | Description | Default
+  :--|:--|:--
+  `loop` | Whether to repeat the entire sequence | `false`
+  `typeSpeed` | Time in milliseconds to `type` a single character | `50`
+  `deleteSpeed` | Time in milliseconds to `delete` a single character | `50`
+  `pauseDelay` | Delay in milliseconds to `pause` | `2000`
+  `postfix` | A string appended to any `str` passed to `type` and `delete` | `''`
+  `getter` | A function to get the current value of `elem` | Returns `elem.innerHTML`
+  `setter` | A function to assign a new value to `elem` | Assigns to `elem.innerHTML`
 
 ### m.type(str [, speed])
 
@@ -114,13 +158,25 @@ Clear the contents of `elem`.
 
 Do nothing for `delay`.
 
-- `delay` &mdash; Default: `opts.pauseDelay`.
+- `delay` &mdash; Defaults to `opts.pauseDelay`.
 
 ### m.call(fn)
 
-Call the given asynchronous `fn`, passing it `elem` as the first argument.
+Call the given *asynchronous* `fn`, passing it `elem` as the first argument.
 
-- `fn` &mdash; Call `this` within this function to signal that it has finished execution.
+- `fn` &mdash; We must invoke `this` within this function to signal that it has finished execution.
+
+### m.triggerPause([fn])
+
+Pauses the sequence. Calls the given *synchronous* `fn` when the sequence has been paused, passing it `elem` as the first argument.
+
+### m.triggerResume()
+
+Resumes the sequence *immediately*. Has no effect if the sequence is already running.
+
+### m.isRunning()
+
+Returns `true` if the sequence is currently running. Else returns `false`.
 
 ## Installation
 
