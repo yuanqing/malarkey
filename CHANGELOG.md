@@ -2,6 +2,7 @@
 
 ## 1.3.0
 - Drop Browserify/Segue dependency (trims almost 1 KB off the minified weight)
+- Add `triggerPause`, `triggerResume`, `isRunning`
 
 ## 1.2.0
 - Add `opts.getter` and `opts.setter` to allow the effect to be applied on other element properties
