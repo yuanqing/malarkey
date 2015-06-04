@@ -7,7 +7,7 @@
 - [Friendly, flexible API](#api) offering fine-grained control
 - Option to [repeat the effect indefinitely](#usage)
 - Option to apply the effect on a [custom element property](#custom-element-property)
-- Allows [pausing and resuming](#trigger-pause-and-resume) the sequence on-the-fly
+- Allows [pausing and resuming](#pausing-and-resuming) the sequence on-the-fly
 - [Extensive tests](test), with [100% coverage](https://coveralls.io/r/yuanqing/malarkey)
 - No dependencies, and super lightweight; just 1.4 KB [minified](dist/malarkey.min.js), or 0.7 KB minified and gzipped
 
@@ -64,9 +64,9 @@ By default, the effect is applied on `elem.innerHTML`. To apply the effect on a 
 </body>
 ```
 
-### Trigger pause and resume
+### Pausing and resuming
 
-Pausing and resuming the sequence on-the-fly is via the `triggerPause` and `triggerResume` methods:
+To pause and resume the sequence on-the-fly, use the `triggerPause` and `triggerResume` methods:
 
 > [**Editable demo**](http://jsfiddle.net/sqozesav/)
 
@@ -98,7 +98,7 @@ Pausing and resuming the sequence on-the-fly is via the `triggerPause` and `trig
 </body>
 ```
 
-Note that here, we toggle between calling `triggerPause` and `triggerResume` on every `click`.
+Note that here, we toggle between calling `triggerPause` and `triggerResume` on every `click` event.
 
 ## API
 
