@@ -38,7 +38,7 @@ For an in-production demo, see [the npm front page](https://npmjs.com).
 
 ### Custom element property
 
-By default, the effect is applied on `elem.innerHTML`. To apply the effect on other element properties (such as the `placeholder` attribute of an `input` element), pass in `opts.getter` and `opts.setter`, like so:
+By default, the effect is applied on `elem.innerHTML`. To apply the effect on a different element properties (such as the `placeholder` attribute of an `input` element), pass in `opts.getter` and `opts.setter`, like so:
 
 > [**Editable demo**](http://jsfiddle.net/qu88jvb9/)
 
@@ -66,7 +66,7 @@ By default, the effect is applied on `elem.innerHTML`. To apply the effect on ot
 
 ### Trigger pause and resume
 
-Pausing and resuming the sequence on-the-fly is via the `triggerPause` and `triggerResume` methods.
+Pausing and resuming the sequence on-the-fly is via the `triggerPause` and `triggerResume` methods:
 
 > [**Editable demo**](http://jsfiddle.net/sqozesav/)
 
@@ -98,11 +98,11 @@ Pausing and resuming the sequence on-the-fly is via the `triggerPause` and `trig
 </body>
 ```
 
-(Click the element to toggle between calling `triggerPause` and `triggerResume`.)
+Here, click on `elem` to toggle between calling `triggerPause` and `triggerResume`.
 
 ## API
 
-In the browser, `malarkey` is a global variable (attached on the `window` object). In Node, do:
+In the browser, `malarkey` is a global variable. In Node, do:
 
 ```js
 var malarkey = require('malarkey');
