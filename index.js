@@ -2,17 +2,23 @@
 
   'use strict';
 
+  var STOPPED  = 0;
+  var STOPPING = 1;
+  var RUNNING  = 2;
+
   function endsWith(str, suffix) {
     return str.indexOf(suffix, str.length - suffix.length) !== -1;
   }
 
+  function noop() {}
+
   function Malarkey(elem, opts) {
 
     // allow `Malarkey` to be called without the `new` keyword
-    if (!(this instanceof Malarkey)) {
+    var self = this;
+    if (!(self instanceof Malarkey)) {
       return new Malarkey(elem, opts);
     }
-    var self = this;
 
     // default `opts`
     opts = opts || {};
@@ -32,12 +38,13 @@
     var fnQueue = [];
     var argsQueue = [];
     var i = -1;
-    var isRunning = false;
+    var state = STOPPED;
+    var stopCb = noop;
     function enqueue(fn, args) {
       fnQueue.push(fn);
       argsQueue.push(args);
-      if (!isRunning) {
-        isRunning = true;
+      if (state != RUNNING) {
+        state = RUNNING;
         // wait for the remaining functions to be enqueued
         setTimeout(function() {
           next();
@@ -46,9 +53,15 @@
       return self;
     }
     function next() {
-      if (++i === fnQueue.length) {
+      if (state != RUNNING) {
+        state = STOPPED;
+        stopCb(elem);
+        stopCb = noop;
+        return;
+      }
+      if (++i == fnQueue.length) {
         if (!loop) {
-          isRunning = false;
+          state = STOPPED;
           return;
         }
         i = 0;
@@ -78,7 +91,7 @@
       var curr = getter(elem);
       var count = curr.length; // default to deleting entire contents of `elem`
       if (x != null) {
-        if (typeof x === 'string') {
+        if (typeof x == 'string') {
           // delete the string `x` if and only if `elem` ends with `x`
           if (endsWith(curr, x + postfix)) {
             count = x.length + postfix.length;
@@ -132,11 +145,29 @@
     self.call = function(fn) {
       return enqueue(_call, [fn]);
     };
+    self.triggerPause = function(cb) {
+      state = STOPPING;
+      stopCb = cb || noop;
+      return self;
+    };
+    self.triggerRun = function() {
+      if (state != RUNNING) { // ie. `STOPPED` or `STOPPING`
+        var prevState = state;
+        state = RUNNING;
+        if (prevState == STOPPED) {
+          next();
+        }
+      }
+      return self;
+    };
+    self.isRunning = function() {
+      return state != STOPPED; // ie. `RUNNING` or `STOPPING`
+    };
 
   }
 
   /* istanbul ignore else */
-  if (typeof module === 'object') {
+  if (typeof module == 'object') {
     module.exports = Malarkey;
   } else {
     root.malarkey = Malarkey;

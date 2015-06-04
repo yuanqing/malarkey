@@ -322,68 +322,209 @@ describe('malarkey(elem [, opts])', function() {
 
   });
 
-  it('custom `getter` and `setter`', function() {
-    var opts = {
-      getter: function(elem) {
-        return elem.getAttribute('title') || '';
-      },
-      setter: function(elem, val) {
-        elem.setAttribute('title', val);
-      }
-    };
-    var str = 'foobar';
-    malarkey(elem, opts)
-      .type(str)
-      .delete(str);
-    // type
-    expectTyping(str, defaultOpts.typeSpeed, opts.getter);
-    // delete
-    expectDeletion(str, defaultOpts.deleteSpeed, opts.getter);
+  describe('triggerPause([cb])', function() {
+
+    it('pauses the sequence', function() {
+      var m = malarkey(elem)
+        .type('abc')
+        .type('def');
+      var speed = defaultOpts.typeSpeed;
+      // type 'a'
+      clock.tick(speed);
+      expectContents('a');
+      // trigger pause
+      m.triggerPause();
+      expect(m.isRunning()).toBe(true);
+      // type 'b'
+      clock.tick(speed);
+      expectContents('ab');
+      expect(m.isRunning()).toBe(true);
+      // type 'c'
+      clock.tick(speed);
+      expectContents('abc');
+      expect(m.isRunning()).toBe(false);
+      // does not type 'def'
+      clock.tick(100 * speed);
+      expectContents('abc');
+    });
+
+    it('calls the given `cb` when paused, passing it `elem`', function() {
+      var m = malarkey(elem)
+        .type('abc')
+        .type('def');
+      var speed = defaultOpts.typeSpeed;
+      // type 'a'
+      clock.tick(speed);
+      expectContents('a');
+      // trigger pause
+      var pauseCb = jasmine.createSpy('fn');
+      m.triggerPause(pauseCb);
+      expect(pauseCb).not.toHaveBeenCalled();
+      // type 'b'
+      clock.tick(speed);
+      expectContents('ab');
+      expect(pauseCb).not.toHaveBeenCalled();
+      // type 'c'
+      clock.tick(speed);
+      expectContents('abc');
+      expect(pauseCb).toHaveBeenCalledWith(elem);
+      // does not type 'def'
+      clock.tick(100 * speed);
+      expectContents('abc');
+    });
+
   });
 
-  it('complex sequence with `opts`', function() {
-    var opts = {
-      loop: true,
-      typeSpeed: 10 * defaultOpts.typeSpeed,
-      deleteSpeed: 10 * defaultOpts.deleteSpeed,
-      pauseDelay: 10 * defaultOpts.pauseDelay,
-      postfix: 'qux'
-    };
-    var str = 'foobar';
-    var customTypeSpeed = 20 * defaultOpts.typeSpeed;
-    var customDeleteSpeed = 20 * defaultOpts.deleteSpeed;
-    var customPauseDelay = 20 * defaultOpts.pauseDelay;
-    var i = 3; // repeat
-    malarkey(elem, opts)
-      .type(str, customTypeSpeed)
-      .delete(str, customDeleteSpeed)
-      .pause(customPauseDelay)
-      .type(str)
-      .delete('bar')
-      .pause()
-      .clear();
-    expectContents('');
-    while (i--) {
+  describe('triggerRun()', function() {
+
+    it('resumes the sequence', function() {
+      var m = malarkey(elem)
+        .type('abc')
+        .type('def');
+      var speed = defaultOpts.typeSpeed;
+      // type 'a'
+      clock.tick(speed);
+      expectContents('a');
+      // trigger pause
+      m.triggerPause();
+      expect(m.isRunning()).toBe(true);
+      // type 'bc'
+      clock.tick(2 * speed);
+      expectContents('abc');
+      expect(m.isRunning()).toBe(false);
+      // trigger run
+      m.triggerRun();
+      expect(m.isRunning()).toBe(true);
+      expectContents('abc');
+      // type 'def'
+      clock.tick(100 * speed);
+      expectContents('abcdef');
+      expect(m.isRunning()).toBe(false);
+    });
+
+    it('has no effect if already running', function() {
+      var m = malarkey(elem)
+        .type('abc')
+        .type('def');
+      var speed = defaultOpts.typeSpeed;
+      // type 'a'
+      clock.tick(speed);
+      expectContents('a');
+      expect(m.isRunning()).toBe(true);
+      // trigger run
+      m.triggerRun();
+      expect(m.isRunning()).toBe(true);
+      // type 'b'
+      clock.tick(speed);
+      expectContents('ab');
+      expect(m.isRunning()).toBe(true);
+      // type 'c'
+      clock.tick(speed);
+      expectContents('abc');
+      expect(m.isRunning()).toBe(true);
+      // type 'def'
+      clock.tick(3 * speed);
+      expectContents('abcdef');
+      expect(m.isRunning()).toBe(false);
+    });
+
+    it('overrides any previous call to `triggerPause`', function() {
+      var m = malarkey(elem)
+        .type('abc')
+        .type('def');
+      var speed = defaultOpts.typeSpeed;
+      // type 'a'
+      clock.tick(speed);
+      expectContents('a');
+      expect(m.isRunning()).toBe(true);
+      // trigger pause
+      m.triggerPause();
+      expect(m.isRunning()).toBe(true);
+      // type 'b'
+      clock.tick(speed);
+      expectContents('ab');
+      expect(m.isRunning()).toBe(true);
+      // trigger run
+      m.triggerRun();
+      expect(m.isRunning()).toBe(true);
+      // type 'c'
+      clock.tick(speed);
+      expectContents('abc');
+      expect(m.isRunning()).toBe(true);
+      // type 'def'
+      clock.tick(3 * speed);
+      expectContents('abcdef');
+      expect(m.isRunning()).toBe(false);
+    });
+
+  });
+
+  describe('with `opts`', function() {
+
+    it('custom `getter` and `setter`', function() {
+      var opts = {
+        getter: function(elem) {
+          return elem.getAttribute('title') || '';
+        },
+        setter: function(elem, val) {
+          elem.setAttribute('title', val);
+        }
+      };
+      var str = 'foobar';
+      malarkey(elem, opts)
+        .type(str)
+        .delete(str);
       // type
-      expectTyping(str + opts.postfix, customTypeSpeed);
-      expectContents(str + opts.postfix);
+      expectTyping(str, defaultOpts.typeSpeed, opts.getter);
       // delete
-      expectDeletion(str + opts.postfix, customDeleteSpeed);
+      expectDeletion(str, defaultOpts.deleteSpeed, opts.getter);
+    });
+
+    it('loop', function() {
+      var opts = {
+        loop: true,
+        typeSpeed: 10 * defaultOpts.typeSpeed,
+        deleteSpeed: 10 * defaultOpts.deleteSpeed,
+        pauseDelay: 10 * defaultOpts.pauseDelay,
+        postfix: 'qux'
+      };
+      var str = 'foobar';
+      var customTypeSpeed = 20 * defaultOpts.typeSpeed;
+      var customDeleteSpeed = 20 * defaultOpts.deleteSpeed;
+      var customPauseDelay = 20 * defaultOpts.pauseDelay;
+      var i = 3; // repeat
+      malarkey(elem, opts)
+        .type(str, customTypeSpeed)
+        .delete(str, customDeleteSpeed)
+        .pause(customPauseDelay)
+        .type(str)
+        .delete('bar')
+        .pause()
+        .clear();
       expectContents('');
-      // pause
-      clock.tick(customPauseDelay);
-      expectContents('');
-      // type
-      expectTyping(str + opts.postfix, opts.typeSpeed);
-      expectContents(str + opts.postfix);
-      // delete
-      expectDeletion('bar' + opts.postfix, opts.deleteSpeed);
-      expectContents('foo');
-      // pause
-      clock.tick(opts.pauseDelay);
-      // clear
-      expectContents('');
-    }
+      while (i--) {
+        // type
+        expectTyping(str + opts.postfix, customTypeSpeed);
+        expectContents(str + opts.postfix);
+        // delete
+        expectDeletion(str + opts.postfix, customDeleteSpeed);
+        expectContents('');
+        // pause
+        clock.tick(customPauseDelay);
+        expectContents('');
+        // type
+        expectTyping(str + opts.postfix, opts.typeSpeed);
+        expectContents(str + opts.postfix);
+        // delete
+        expectDeletion('bar' + opts.postfix, opts.deleteSpeed);
+        expectContents('foo');
+        // pause
+        clock.tick(opts.pauseDelay);
+        // clear
+        expectContents('');
+      }
+    });
+
   });
 
 });
