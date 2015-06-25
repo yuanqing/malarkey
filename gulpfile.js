@@ -14,7 +14,7 @@ var paths = {
   dist: 'dist/',
   karmaConf: __dirname + '/karma.conf.js',
   src: ['index.js'],
-  test: ['test/*.spec.js']
+  test: ['test/*.js']
 };
 
 var defaultTasks = ['lint', 'test'];
