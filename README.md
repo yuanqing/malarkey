@@ -15,14 +15,14 @@ For an in-production demo, see [the npm front page](https://npmjs.com).
 
 ## Usage
 
-> [**Editable demo**](http://jsfiddle.net/yoyjoLhx/)
+> [**Editable demo**](http://jsfiddle.net/xchon0kt/)
 
 ```html
 <body>
   <div class="malarkey"></div>
-  <script src="dist/malarkey.min.js"></script>
+  <script src="../dist/malarkey.min.js"></script>
   <script>
-    var elem = document.querySelectorAll('.malarkey')[0];
+    var elem = document.querySelector('.malarkey');
     var opts = {
       typeSpeed: 50,
       deleteSpeed: 50,
@@ -40,14 +40,14 @@ For an in-production demo, see [the npm front page](https://npmjs.com).
 
 By default, the effect is applied on `elem.innerHTML`. To apply the effect on a different element property (such as the `placeholder` attribute of an `input` element), pass in `opts.getter` and `opts.setter`, like so:
 
-> [**Editable demo**](http://jsfiddle.net/qu88jvb9/)
+> [**Editable demo**](http://jsfiddle.net/za9mazh3/)
 
 ```html
 <body>
   <input type="text" class="malarkey">
-  <script src="dist/malarkey.min.js"></script>
+  <script src="../dist/malarkey.min.js"></script>
   <script>
-    var elem = document.querySelectorAll('.malarkey')[0];
+    var elem = document.querySelector('.malarkey');
     var attr = 'placeholder';
     var opts = {
       loop: true,
@@ -68,14 +68,14 @@ By default, the effect is applied on `elem.innerHTML`. To apply the effect on a 
 
 To pause and resume the sequence on-the-fly, use the `triggerPause` and `triggerResume` methods:
 
-> [**Editable demo**](http://jsfiddle.net/47peyett/)
+> [**Editable demo**](http://jsfiddle.net/4gqpsazu/)
 
 ```html
 <body>
   <div class="malarkey"></div>
   <script src="../dist/malarkey.min.js"></script>
   <script>
-    var elem = document.querySelectorAll('.malarkey')[0];
+    var elem = document.querySelector('.malarkey');
     var opts = {
       typeSpeed: 50,
       deleteSpeed: 50,
@@ -162,13 +162,13 @@ Do nothing for `delay`.
 
 ### m.call(fn)
 
-Call the given *asynchronous* `fn`, passing it `elem` as the first argument.
+Call the given `fn`, passing it `elem` as the first argument.
 
-- `fn` &mdash; We must invoke `this` within this function to signal that it has finished execution.
+- `fn` &mdash; Can be asynchronous. We must invoke `this` within this function to signal that it has finished execution.
 
 ### m.triggerPause([fn])
 
-Pauses the sequence. Calls the given *synchronous* `fn` when the sequence has been paused, passing it `elem` as the first argument.
+Pauses the sequence. Calls the given `fn` when the sequence has been paused, passing it `elem` as the first argument.
 
 ### m.triggerResume()
 
