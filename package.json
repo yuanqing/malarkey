@@ -24,10 +24,10 @@
     "gulp-uglify": "^1.2.0",
     "jasmine-jquery": "^2.1.0",
     "jquery": "^2.1.4",
-    "jshint-stylish": "^2.0.0",
-    "karma": "^0.12.36",
+    "jshint-stylish": "^2.0.1",
+    "karma": "^0.12.37",
     "karma-browserify": "^4.2.1",
-    "karma-coverage": "0.2.6",
+    "karma-coverage": "0.4.2",
     "karma-jasmine": "^0.3.5",
     "karma-phantomjs-launcher": "^0.2.0",
     "karma-spec-reporter": "^0.0.19"
