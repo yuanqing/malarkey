@@ -5,7 +5,7 @@ var gulp = require('gulp');
 var jshint = require('gulp-jshint');
 var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
-var karma = require('karma').server;
+var karma = require('karma');
 
 var moduleName = 'malarkey';
 
@@ -25,8 +25,8 @@ gulp.task('lint', function() {
     .pipe(jshint.reporter('jshint-stylish'));
 });
 
-gulp.task('clean', function(cb) {
-  del([paths.coverage, paths.dist], cb);
+gulp.task('clean', function() {
+  return del([paths.coverage, paths.dist]);
 });
 
 gulp.task('dist', ['clean'], function() {
@@ -39,10 +39,11 @@ gulp.task('dist', ['clean'], function() {
 });
 
 gulp.task('test', ['dist'], function(cb) {
-  karma.start({
+  var server = new karma.Server({
     configFile: paths.karmaConf,
     singleRun: true
   }, cb);
+  server.start();
 });
 
 gulp.task('watch', defaultTasks, function() {
