@@ -194,4 +194,4 @@ $ bower i --save yuanqing/malarkey
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE.md)
