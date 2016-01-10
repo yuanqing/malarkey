@@ -130,6 +130,10 @@
       fn.call(cb, elem);
     }
 
+    // expose queue-bypassing methods (use with care)
+    self._type = _type;
+    self._clear = _clear;
+
     // expose the public methods
     self.type = function(str, speed) {
       return enqueue(_type, [str + postfix, speed || typeSpeed]);
