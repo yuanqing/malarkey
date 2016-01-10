@@ -9,7 +9,7 @@
 - Option to apply the effect on a [custom element property](#custom-element-property)
 - Allows [pausing and resuming](#pausing-and-resuming) the sequence on-the-fly
 - [Extensive tests](test), with [100% coverage](https://coveralls.io/r/yuanqing/malarkey)
-- No dependencies, and super lightweight; just 1.4 KB [minified](dist/malarkey.min.js), or 0.7 KB minified and gzipped
+- No dependencies, and super lightweight; just 1.5 KB [minified](dist/malarkey.min.js), or 0.8 KB minified and gzipped
 
 For an in-production demo, see [the npm front page](https://npmjs.com).
 
