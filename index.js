@@ -61,6 +61,7 @@
       }
       if (++i == fnQueue.length) {
         if (!loop) {
+          i = fnQueue.length - 1; // set `i` to the last element of `fnQueue`
           state = STOPPED;
           return;
         }
