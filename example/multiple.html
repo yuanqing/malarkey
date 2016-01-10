@@ -30,8 +30,14 @@
       }
       var xElem = document.querySelector('.x');
       var yElem = document.querySelector('.y');
-      var x = malarkey(xElem, { typeSpeed: 200, loop: true });
-      var y = malarkey(yElem, { typeSpeed: 200, loop: false });
+      var x = malarkey(xElem, {
+        typeSpeed: 200,
+        loop: true
+      });
+      var y = malarkey(yElem, {
+        typeSpeed: 200,
+        loop: false
+      });
       [
         { x: 'foo', y: 'bar' },
         { x: 'baz', y: 'qux' }
@@ -39,7 +45,7 @@
         x.call(function() {
           addClass(xElem, CURSOR_CLASS);
           this();
-        })
+        });
         x.type(text.x);
         x.call(function() {
           removeClass(xElem, CURSOR_CLASS);
