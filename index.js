@@ -28,10 +28,10 @@
     var pauseDelay = opts.delay || opts.pauseDelay || 2000;
     var postfix = opts.postfix || '';
     var getter = opts.getter || function(elem) {
-      return elem.innerHTML;
+      return elem.textContent;
     };
     var setter = opts.setter || function(elem, val) {
-      elem.innerHTML = val;
+      elem.textContent = val;
     };
 
     // the function queue
