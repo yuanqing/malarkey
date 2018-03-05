@@ -1,5 +1,5 @@
 .DS_Store
-coverage/
-node_modules/
-sandbox/
+/coverage
+/node_modules
+.nyc_output
 *.log

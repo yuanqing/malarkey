@@ -1,20 +1,15 @@
 notifications:
   email: false
 
-sudo: false
-
 language: node_js
 
 node_js:
-  - '0.10'
-  - '0.11'
-  - '0.12'
-  - '4'
-  - '5'
+  - 'node'
 
 script:
-  - gulp
+  - yarn lint
+  - yarn coverage
 
 after_success:
-  - npm i coveralls
-  - cat coverage/lcov.info | node_modules/.bin/coveralls
+  - yarn add --dev coveralls
+  - cat coverage/lcov.info | npx coveralls

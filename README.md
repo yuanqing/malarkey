@@ -1,6 +1,6 @@
 # Malarkey.js [![npm Version](http://img.shields.io/npm/v/malarkey.svg?style=flat)](https://www.npmjs.org/package/malarkey) [![Build Status](https://img.shields.io/travis/yuanqing/malarkey.svg?branch=master&style=flat)](https://travis-ci.org/yuanqing/malarkey) [![Coverage Status](https://img.shields.io/coveralls/yuanqing/malarkey.svg?style=flat)](https://coveralls.io/r/yuanqing/malarkey)
 
-> Simulate a typewriter/ticker effect on a DOM element.
+> Simulate a typewriter effect in vanilla JavaScript.
 
 ## Features
 
