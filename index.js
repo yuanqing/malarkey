@@ -36,7 +36,9 @@ function malarkey (callback, options) {
       return enqueue(_clear, [])
     },
     pause: function (pauseDuration) {
-      return enqueue(setTimeout, [pauseDuration != null ? pauseDuration : defaultPauseDuration])
+      return enqueue(setTimeout, [
+        pauseDuration != null ? pauseDuration : defaultPauseDuration
+      ])
     },
     call: function (fn) {
       return enqueue(_call, [fn])
