@@ -32,11 +32,14 @@ function malarkey (callback, options) {
         deleteSpeed != null ? deleteSpeed : defaultDeleteSpeed
       ])
     },
+    clear: function () {
+      return enqueue(_clear, [])
+    },
     pause: function (pauseDuration) {
       return enqueue(setTimeout, [pauseDuration != null ? pauseDuration : defaultPauseDuration])
     },
-    isRunning: function () {
-      return isRunning
+    call: function (fn) {
+      return enqueue(_call, [fn])
     },
     triggerPause: function (callback) {
       isRunning = false
@@ -49,6 +52,9 @@ function malarkey (callback, options) {
         next()
       }
       return methods
+    },
+    isRunning: function () {
+      return isRunning
     }
   }
 
@@ -109,6 +115,16 @@ function malarkey (callback, options) {
       callback(text)
       setTimeout(deleteCharacter, timeout)
     }, timeout)
+  }
+
+  function _clear (next) {
+    text = ''
+    callback(text)
+    next()
+  }
+
+  function _call (next, fn) {
+    fn(next, text)
   }
 
   return methods
