@@ -1,177 +1,117 @@
-(function(root) {
+function noop () {}
 
-  'use strict';
+var DELETE_ALL_SENTINEL = -1
 
-  var STOPPED  = 0;
-  var STOPPING = 1;
-  var RUNNING  = 2;
+function malarkey (callback, options) {
+  options = options || {}
+  var defaultTypeSpeed = options.typeSpeed || 50
+  var defaultDeleteSpeed = options.deleteSpeed || 50
+  var defaultPauseDuration = options.pauseDuration || 2000
+  var repeat = options.repeat
 
-  function endsWith(str, suffix) {
-    return str.indexOf(suffix, str.length - suffix.length) !== -1;
+  var text = ''
+
+  var functionQueue = []
+  var functionArguments = []
+  var functionIndex = -1
+
+  var pauseCallback = noop
+
+  var isRunning = false
+
+  var methods = {
+    type: function (text, typeSpeed) {
+      return enqueue(_type, [
+        text,
+        typeSpeed != null ? typeSpeed : defaultTypeSpeed
+      ])
+    },
+    delete: function (characterCount, deleteSpeed) {
+      return enqueue(_delete, [
+        characterCount || DELETE_ALL_SENTINEL,
+        deleteSpeed != null ? deleteSpeed : defaultDeleteSpeed
+      ])
+    },
+    pause: function (pauseDuration) {
+      return enqueue(setTimeout, [pauseDuration != null ? pauseDuration : defaultPauseDuration])
+    },
+    isRunning: function () {
+      return isRunning
+    },
+    triggerPause: function (callback) {
+      isRunning = false
+      pauseCallback = callback
+      return methods
+    },
+    triggerResume: function () {
+      if (!isRunning) {
+        isRunning = true
+        next()
+      }
+      return methods
+    }
   }
 
-  function noop() {}
-
-  function Malarkey(elem, opts) {
-
-    // allow `Malarkey` to be called without the `new` keyword
-    var self = this;
-    if (!(self instanceof Malarkey)) {
-      return new Malarkey(elem, opts);
+  function next () {
+    if (!isRunning) {
+      pauseCallback(text)
+      pauseCallback = noop
+      return
     }
-
-    // default `opts`
-    opts = opts || {};
-    var loop = opts.loop;
-    var typeSpeed = opts.speed || opts.typeSpeed || 50;
-    var deleteSpeed = opts.speed || opts.deleteSpeed || 50;
-    var pauseDelay = opts.delay || opts.pauseDelay || 2000;
-    var postfix = opts.postfix || '';
-    var getter = opts.getter || function(elem) {
-      return elem.innerHTML;
-    };
-    var setter = opts.setter || function(elem, val) {
-      elem.innerHTML = val;
-    };
-
-    // the function queue
-    var fnQueue = [];
-    var argsQueue = [];
-    var i = -1;
-    var state = STOPPED;
-    var pauseCb = noop;
-    function enqueue(fn, args) {
-      fnQueue.push(fn);
-      argsQueue.push(args);
-      if (state != RUNNING) {
-        state = RUNNING;
-        // wait for the remaining functions to be enqueued
-        setTimeout(function() {
-          next();
-        }, 0);
+    functionIndex += 1
+    if (functionIndex === functionQueue.length) {
+      if (!repeat) {
+        functionIndex = functionQueue.length - 1
+        isRunning = false
+        return
       }
-      return self;
+      functionIndex = 0
     }
-    function next() {
-      if (state != RUNNING) {
-        state = STOPPED;
-        pauseCb(elem);
-        pauseCb = noop;
-        return;
-      }
-      if (++i == fnQueue.length) {
-        if (!loop) {
-          i = fnQueue.length - 1; // set `i` to the last element of `fnQueue`
-          state = STOPPED;
-          return;
-        }
-        i = 0;
-      }
-      fnQueue[i].apply(null, [].concat(next, argsQueue[i]));
-    }
-
-    // internal functions that are `enqueued` via the respective public methods
-    function _type(cb, str, speed) {
-      var len = str.length;
-      if (!len) {
-        return cb();
-      }
-      (function t(i) {
-        setTimeout(function() {
-          setter(elem, getter(elem) + str[i]);
-          i += 1;
-          if (i < len) {
-            t(i);
-          } else {
-            cb();
-          }
-        }, speed);
-      })(0);
-    }
-    function _delete(cb, x, speed) {
-      var curr = getter(elem);
-      var count = curr.length; // default to deleting entire contents of `elem`
-      if (x != null) {
-        if (typeof x == 'string') {
-          // delete the string `x` if and only if `elem` ends with `x`
-          if (endsWith(curr, x + postfix)) {
-            count = x.length + postfix.length;
-          } else {
-            count = 0;
-          }
-        } else {
-          // delete the last `x` characters from `elem`
-          if (x > -1) {
-            count = Math.min(x, count);
-          }
-        }
-      }
-      if (!count) {
-        return cb();
-      }
-      (function d(count) {
-        setTimeout(function() {
-          var curr = getter(elem);
-          if (count) {
-            // drop last char
-            setter(elem, curr.substring(0, curr.length-1));
-            d(count - 1);
-          } else {
-            cb();
-          }
-        }, speed);
-      })(count);
-    }
-    function _clear(cb) {
-      setter(elem, '');
-      cb();
-    }
-    function _call(cb, fn) {
-      fn.call(cb, elem);
-    }
-
-    // expose the public methods
-    self.type = function(str, speed) {
-      return enqueue(_type, [str + postfix, speed || typeSpeed]);
-    };
-    self.delete = function(x, speed) {
-      return enqueue(_delete, [x, speed || deleteSpeed]);
-    };
-    self.clear = function() {
-      return enqueue(_clear);
-    };
-    self.pause = function(delay) {
-      return enqueue(setTimeout, [delay || pauseDelay]);
-    };
-    self.call = function(fn) {
-      return enqueue(_call, [fn]);
-    };
-    self.triggerPause = function(cb) {
-      state = STOPPING;
-      pauseCb = cb || noop;
-      return self;
-    };
-    self.triggerResume = function() {
-      if (state != RUNNING) { // ie. `STOPPED` or `STOPPING`
-        var prevState = state;
-        state = RUNNING;
-        if (prevState == STOPPED) {
-          next();
-        }
-      }
-      return self;
-    };
-    self.isRunning = function() {
-      return state != STOPPED; // ie. `RUNNING` or `STOPPING`
-    };
-
+    functionQueue[functionIndex].apply(
+      null,
+      [].concat(next, functionArguments[functionIndex])
+    )
   }
 
-  /* istanbul ignore else */
-  if (typeof module == 'object') {
-    module.exports = Malarkey;
-  } else {
-    root.malarkey = Malarkey;
+  function enqueue (callback, args) {
+    functionQueue.push(callback)
+    functionArguments.push(args)
+    if (!isRunning) {
+      isRunning = true
+      setTimeout(next, 0)
+    }
+    return methods
   }
 
-})(this);
+  function _type (next, typeText, timeout) {
+    var length = typeText.length
+    var i = -1
+    setTimeout(function typeCharacter () {
+      if (++i === length) {
+        next()
+        return
+      }
+      text += typeText[i]
+      callback(text)
+      setTimeout(typeCharacter, timeout)
+    }, timeout)
+  }
+
+  function _delete (next, characterCount, timeout) {
+    var length =
+      characterCount === DELETE_ALL_SENTINEL ? 0 : text.length - characterCount
+    setTimeout(function deleteCharacter () {
+      if (text.length === length) {
+        next()
+        return
+      }
+      text = text.substring(0, text.length - 1)
+      callback(text)
+      setTimeout(deleteCharacter, timeout)
+    }, timeout)
+  }
+
+  return methods
+}
+
+module.exports = malarkey

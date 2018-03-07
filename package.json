@@ -9,17 +9,20 @@
     "url": "git://github.com/yuanqing/malarkey.git"
   },
   "devDependencies": {
+    "gzip-size-cli": "^2.1.0",
     "nyc": "^11.4.1",
     "prettier-standard": "^8.0.0",
     "standard": "^11.0.0",
-    "tape": "^4.9.0"
+    "tape": "^4.9.0",
+    "uglify-js": "^3.3.13"
   },
   "scripts": {
     "clean": "rm -rf *.log coverage",
     "coverage": "yarn clean && nyc --reporter=html --reporter=lcov --reporter=text npm test",
     "fix": "prettier-standard index.js test.js",
     "lint": "standard index.js test.js",
-    "test": "tape test.js"
+    "test": "tape test.js",
+    "weight": "uglifyjs index.js --compress --mangle --toplevel | gzip-size"
   },
   "keywords": [
     "animate",
