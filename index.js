@@ -1,13 +1,9 @@
-function noop () {}
-
 var DELETE_ALL_SENTINEL = -1
+
+function noop () {}
 
 function malarkey (callback, options) {
   options = options || {}
-  var defaultTypeSpeed = options.typeSpeed || 50
-  var defaultDeleteSpeed = options.deleteSpeed || 50
-  var defaultPauseDuration = options.pauseDuration || 2000
-  var repeat = options.repeat
 
   var text = ''
 
@@ -15,108 +11,110 @@ function malarkey (callback, options) {
   var functionArguments = []
   var functionIndex = -1
 
-  var pauseCallback = noop
-
-  var isRunning = false
+  var isStopped = true
+  var stoppedCallback = noop
 
   var methods = {
-    type: function (text, typeSpeed) {
-      return enqueue(_type, [
-        text,
-        typeSpeed != null ? typeSpeed : defaultTypeSpeed
-      ])
+    type: function (text, typeOptions) {
+      var typeSpeed = typeOptions && typeOptions.typeSpeed
+      return enqueue(_type, [text, typeSpeed || options.typeSpeed || 50])
     },
-    delete: function (characterCount, deleteSpeed) {
+    delete: function (characterCount, deleteOptions) {
+      if (typeof characterCount === 'object') {
+        deleteOptions = characterCount
+        characterCount = DELETE_ALL_SENTINEL
+      }
+      var deleteSpeed = deleteOptions && deleteOptions.deleteSpeed
       return enqueue(_delete, [
         characterCount || DELETE_ALL_SENTINEL,
-        deleteSpeed != null ? deleteSpeed : defaultDeleteSpeed
+        deleteSpeed || options.deleteSpeed || 50
       ])
     },
     clear: function () {
-      return enqueue(_clear, [])
+      return enqueue(_clear, null)
     },
     pause: function (pauseDuration) {
       return enqueue(setTimeout, [
-        pauseDuration != null ? pauseDuration : defaultPauseDuration
+        pauseDuration != null ? pauseDuration : options.pauseDuration || 2000
       ])
     },
-    call: function (fn) {
-      return enqueue(_call, [fn])
+    call: function (callback) {
+      return enqueue(_call, [callback])
     },
-    triggerPause: function (callback) {
-      isRunning = false
-      pauseCallback = callback
+    stop: function (callback) {
+      isStopped = true
+      stoppedCallback = callback || noop
       return methods
     },
-    triggerResume: function () {
-      if (!isRunning) {
-        isRunning = true
+    start: function () {
+      if (isStopped) {
+        isStopped = false
         next()
       }
       return methods
     },
-    isRunning: function () {
-      return isRunning
+    isStopped: function () {
+      return isStopped
     }
   }
 
   function next () {
-    if (!isRunning) {
-      pauseCallback(text)
-      pauseCallback = noop
+    if (isStopped) {
+      stoppedCallback(text)
+      stoppedCallback = noop
       return
     }
     functionIndex += 1
     if (functionIndex === functionQueue.length) {
-      if (!repeat) {
+      if (!options.repeat) {
         functionIndex = functionQueue.length - 1
-        isRunning = false
+        isStopped = true
         return
       }
       functionIndex = 0
     }
     functionQueue[functionIndex].apply(
       null,
-      [].concat(next, functionArguments[functionIndex])
+      [next].concat(functionArguments[functionIndex])
     )
   }
 
   function enqueue (callback, args) {
     functionQueue.push(callback)
     functionArguments.push(args)
-    if (!isRunning) {
-      isRunning = true
+    if (isStopped) {
+      isStopped = false
       setTimeout(next, 0)
     }
     return methods
   }
 
-  function _type (next, typeText, timeout) {
+  function _type (next, typeText, typeSpeed) {
     var length = typeText.length
-    var i = -1
+    var i = 0
     setTimeout(function typeCharacter () {
-      if (++i === length) {
+      text += typeText[i++]
+      callback(text)
+      if (i === length) {
         next()
         return
       }
-      text += typeText[i]
-      callback(text)
-      setTimeout(typeCharacter, timeout)
-    }, timeout)
+      setTimeout(typeCharacter, typeSpeed)
+    }, typeSpeed)
   }
 
-  function _delete (next, characterCount, timeout) {
-    var length =
+  function _delete (next, characterCount, deleteSpeed) {
+    var finalLength =
       characterCount === DELETE_ALL_SENTINEL ? 0 : text.length - characterCount
     setTimeout(function deleteCharacter () {
-      if (text.length === length) {
+      text = text.substring(0, text.length - 1)
+      callback(text)
+      if (text.length === finalLength) {
         next()
         return
       }
-      text = text.substring(0, text.length - 1)
-      callback(text)
-      setTimeout(deleteCharacter, timeout)
-    }, timeout)
+      setTimeout(deleteCharacter, deleteSpeed)
+    }, deleteSpeed)
   }
 
   function _clear (next) {
@@ -125,8 +123,8 @@ function malarkey (callback, options) {
     next()
   }
 
-  function _call (next, fn) {
-    fn(next, text)
+  function _call (next, callback) {
+    callback(next, text)
   }
 
   return methods
