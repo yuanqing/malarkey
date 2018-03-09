@@ -13,12 +13,13 @@ test('resumes the stopped sequence', function (t) {
     .type('foo')
   t.false(m.isStopped())
   t.looseEquals(results, [])
-
   m.stop()
+
+  clock.tick(150)
   t.true(m.isStopped())
   t.looseEquals(results, [])
-
   m.resume()
+
   clock.tick(150)
   t.looseEquals(results, ['f', 'fo', 'foo'])
 
