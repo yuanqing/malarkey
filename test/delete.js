@@ -12,14 +12,19 @@ test('deletes all characters at the default speed of 50 milliseconds', function 
   malarkey(callback)
     .type('foo')
     .delete()
-  clock.tick(150) // type 'foo'
+
+  clock.tick(150)
   t.looseEquals(results, ['f', 'fo', 'foo'])
+
   clock.tick(50)
   t.looseEquals(results, ['f', 'fo', 'foo', 'fo'])
+
   clock.tick(50)
   t.looseEquals(results, ['f', 'fo', 'foo', 'fo', 'f'])
+
   clock.tick(50)
   t.looseEquals(results, ['f', 'fo', 'foo', 'fo', 'f', ''])
+
   clock.uninstall()
 })
 
@@ -33,14 +38,19 @@ test('deletes the specified number of characters at the default speed of 50 mill
   malarkey(callback)
     .type('foo')
     .delete(2)
-  clock.tick(150) // type 'foo'
+
+  clock.tick(150)
   t.looseEquals(results, ['f', 'fo', 'foo'])
+
   clock.tick(50)
   t.looseEquals(results, ['f', 'fo', 'foo', 'fo'])
+
   clock.tick(50)
   t.looseEquals(results, ['f', 'fo', 'foo', 'fo', 'f'])
+
   clock.tick(50)
   t.looseEquals(results, ['f', 'fo', 'foo', 'fo', 'f']) // no change
+
   clock.uninstall()
 })
 
@@ -55,14 +65,19 @@ test('deletes all characters at the speed set via `options`', function (t) {
   malarkey(callback, options)
     .type('foo')
     .delete()
-  clock.tick(150) // type 'foo'
+
+  clock.tick(150)
   t.looseEquals(results, ['f', 'fo', 'foo'])
+
   clock.tick(1)
   t.looseEquals(results, ['f', 'fo', 'foo', 'fo'])
+
   clock.tick(1)
   t.looseEquals(results, ['f', 'fo', 'foo', 'fo', 'f'])
+
   clock.tick(1)
   t.looseEquals(results, ['f', 'fo', 'foo', 'fo', 'f', ''])
+
   clock.uninstall()
 })
 
@@ -77,14 +92,19 @@ test('deletes the specified number of characters at the speed set via `options`'
   malarkey(callback, options)
     .type('foo')
     .delete(2)
-  clock.tick(150) // type 'foo'
+
+  clock.tick(150)
   t.looseEquals(results, ['f', 'fo', 'foo'])
+
   clock.tick(1)
   t.looseEquals(results, ['f', 'fo', 'foo', 'fo'])
+
   clock.tick(1)
   t.looseEquals(results, ['f', 'fo', 'foo', 'fo', 'f'])
+
   clock.tick(1)
   t.looseEquals(results, ['f', 'fo', 'foo', 'fo', 'f']) // no change
+
   clock.uninstall()
 })
 
@@ -101,16 +121,22 @@ test('deletes all characters at the speed set via `deleteOptions`', function (t)
     .delete()
     .type('bar')
     .delete(deleteOptions)
-  clock.tick(150) // type 'foo'
+
+  clock.tick(150)
   t.looseEquals(results, ['f', 'fo', 'foo'])
+
   clock.tick(50)
   t.looseEquals(results, ['f', 'fo', 'foo', 'fo'])
+
   clock.tick(50)
   t.looseEquals(results, ['f', 'fo', 'foo', 'fo', 'f'])
+
   clock.tick(50)
   t.looseEquals(results, ['f', 'fo', 'foo', 'fo', 'f', ''])
-  clock.tick(150) // type 'bar'
+
+  clock.tick(150)
   t.looseEquals(results, ['f', 'fo', 'foo', 'fo', 'f', '', 'b', 'ba', 'bar'])
+
   clock.tick(5)
   t.looseEquals(results, [
     'f',
@@ -124,6 +150,7 @@ test('deletes all characters at the speed set via `deleteOptions`', function (t)
     'bar',
     'ba'
   ])
+
   clock.tick(5)
   t.looseEquals(results, [
     'f',
@@ -138,6 +165,7 @@ test('deletes all characters at the speed set via `deleteOptions`', function (t)
     'ba',
     'b'
   ])
+
   clock.tick(5)
   t.looseEquals(results, [
     'f',
@@ -153,6 +181,7 @@ test('deletes all characters at the speed set via `deleteOptions`', function (t)
     'b',
     ''
   ])
+
   clock.uninstall()
 })
 
@@ -169,14 +198,19 @@ test('deletes the specified number of characters characters at the speed set via
     .delete(2)
     .type('bar')
     .delete(1, deleteOptions)
-  clock.tick(150) // type 'foo'
+
+  clock.tick(150)
   t.looseEquals(results, ['f', 'fo', 'foo'])
+
   clock.tick(50)
   t.looseEquals(results, ['f', 'fo', 'foo', 'fo'])
+
   clock.tick(50)
   t.looseEquals(results, ['f', 'fo', 'foo', 'fo', 'f'])
-  clock.tick(150) // type 'bar'
+
+  clock.tick(150)
   t.looseEquals(results, ['f', 'fo', 'foo', 'fo', 'f', 'fb', 'fba', 'fbar'])
+
   clock.tick(2)
   t.looseEquals(results, [
     'f',
@@ -189,6 +223,7 @@ test('deletes the specified number of characters characters at the speed set via
     'fbar',
     'fba'
   ])
+
   clock.tick(2)
   t.looseEquals(results, [
     'f',
@@ -201,5 +236,6 @@ test('deletes the specified number of characters characters at the speed set via
     'fbar',
     'fba'
   ])
+
   clock.uninstall()
 })

@@ -11,12 +11,16 @@ test('types at the default speed of 50 milliseconds', function (t) {
   }
   malarkey(callback).type('foo')
   t.looseEquals(results, [])
+
   clock.tick(50)
   t.looseEquals(results, ['f'])
+
   clock.tick(50)
   t.looseEquals(results, ['f', 'fo'])
+
   clock.tick(50)
   t.looseEquals(results, ['f', 'fo', 'foo'])
+
   clock.uninstall()
 })
 
@@ -30,12 +34,16 @@ test('types at the speed set via `options`', function (t) {
   const options = { typeSpeed: 1 }
   malarkey(callback, options).type('foo')
   t.looseEquals(results, [])
+
   clock.tick(1)
   t.looseEquals(results, ['f'])
+
   clock.tick(1)
   t.looseEquals(results, ['f', 'fo'])
+
   clock.tick(1)
   t.looseEquals(results, ['f', 'fo', 'foo'])
+
   clock.uninstall()
 })
 
@@ -50,17 +58,24 @@ test('types at the specified speed', function (t) {
     .type('foo')
     .type('bar', { typeSpeed: 2 })
   t.looseEquals(results, [])
+
   clock.tick(50)
   t.looseEquals(results, ['f'])
+
   clock.tick(50)
   t.looseEquals(results, ['f', 'fo'])
+
   clock.tick(50)
   t.looseEquals(results, ['f', 'fo', 'foo'])
+
   clock.tick(2)
   t.looseEquals(results, ['f', 'fo', 'foo', 'foob'])
+
   clock.tick(2)
   t.looseEquals(results, ['f', 'fo', 'foo', 'foob', 'fooba'])
+
   clock.tick(2)
   t.looseEquals(results, ['f', 'fo', 'foo', 'foob', 'fooba', 'foobar'])
+
   clock.uninstall()
 })
