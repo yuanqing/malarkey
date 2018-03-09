@@ -11,14 +11,14 @@ test('clears the text', function (t) {
   }
   malarkey(callback)
     .type('foo')
-    .pause()
+    .pause(1)
     .clear()
   t.looseEquals(results, [])
 
   clock.tick(150)
   t.looseEquals(results, ['f', 'fo', 'foo'])
 
-  clock.tick(2000)
+  clock.tick(1)
   t.looseEquals(results, ['f', 'fo', 'foo', ''])
 
   clock.uninstall()

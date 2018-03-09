@@ -3,7 +3,7 @@ const test = require('tape')
 const malarkey = require('../')
 
 test('calls the given `fn`', function (t) {
-  t.plan(7)
+  t.plan(5)
   const clock = lolex.install()
   const results = []
   function callback (text) {
@@ -20,13 +20,7 @@ test('calls the given `fn`', function (t) {
     .call(fn)
   t.looseEquals(results, [])
 
-  clock.tick(50)
-  t.looseEquals(results, ['f'])
-
-  clock.tick(50)
-  t.looseEquals(results, ['f', 'fo'])
-
-  clock.tick(50)
+  clock.tick(150)
   t.looseEquals(results, ['f', 'fo', 'foo'])
 
   clock.uninstall()

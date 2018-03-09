@@ -3,7 +3,7 @@ const test = require('tape')
 const malarkey = require('../')
 
 test('deletes all characters at the default speed of 50 milliseconds', function (t) {
-  t.plan(4)
+  t.plan(5)
   const clock = lolex.install()
   const results = []
   function callback (text) {
@@ -12,6 +12,7 @@ test('deletes all characters at the default speed of 50 milliseconds', function 
   malarkey(callback)
     .type('foo')
     .delete()
+  t.looseEquals(results, [])
 
   clock.tick(150)
   t.looseEquals(results, ['f', 'fo', 'foo'])
@@ -29,7 +30,7 @@ test('deletes all characters at the default speed of 50 milliseconds', function 
 })
 
 test('deletes the specified number of characters at the default speed of 50 milliseconds', function (t) {
-  t.plan(4)
+  t.plan(5)
   const clock = lolex.install()
   const results = []
   function callback (text) {
@@ -38,6 +39,7 @@ test('deletes the specified number of characters at the default speed of 50 mill
   malarkey(callback)
     .type('foo')
     .delete(2)
+  t.looseEquals(results, [])
 
   clock.tick(150)
   t.looseEquals(results, ['f', 'fo', 'foo'])
@@ -49,13 +51,13 @@ test('deletes the specified number of characters at the default speed of 50 mill
   t.looseEquals(results, ['f', 'fo', 'foo', 'fo', 'f'])
 
   clock.tick(50)
-  t.looseEquals(results, ['f', 'fo', 'foo', 'fo', 'f']) // no change
+  t.looseEquals(results, ['f', 'fo', 'foo', 'fo', 'f'])
 
   clock.uninstall()
 })
 
 test('deletes all characters at the speed set via `options`', function (t) {
-  t.plan(4)
+  t.plan(5)
   const clock = lolex.install()
   const results = []
   function callback (text) {
@@ -65,6 +67,7 @@ test('deletes all characters at the speed set via `options`', function (t) {
   malarkey(callback, options)
     .type('foo')
     .delete()
+  t.looseEquals(results, [])
 
   clock.tick(150)
   t.looseEquals(results, ['f', 'fo', 'foo'])
@@ -82,7 +85,7 @@ test('deletes all characters at the speed set via `options`', function (t) {
 })
 
 test('deletes the specified number of characters at the speed set via `options`', function (t) {
-  t.plan(4)
+  t.plan(5)
   const clock = lolex.install()
   const results = []
   function callback (text) {
@@ -92,6 +95,7 @@ test('deletes the specified number of characters at the speed set via `options`'
   malarkey(callback, options)
     .type('foo')
     .delete(2)
+  t.looseEquals(results, [])
 
   clock.tick(150)
   t.looseEquals(results, ['f', 'fo', 'foo'])
@@ -103,24 +107,25 @@ test('deletes the specified number of characters at the speed set via `options`'
   t.looseEquals(results, ['f', 'fo', 'foo', 'fo', 'f'])
 
   clock.tick(1)
-  t.looseEquals(results, ['f', 'fo', 'foo', 'fo', 'f']) // no change
+  t.looseEquals(results, ['f', 'fo', 'foo', 'fo', 'f'])
 
   clock.uninstall()
 })
 
 test('deletes all characters at the speed set via `deleteOptions`', function (t) {
-  t.plan(8)
+  t.plan(9)
   const clock = lolex.install()
   const results = []
   function callback (text) {
     results.push(text)
   }
-  const deleteOptions = { deleteSpeed: 5 }
+  const deleteOptions = { deleteSpeed: 1 }
   malarkey(callback)
     .type('foo')
     .delete()
     .type('bar')
     .delete(deleteOptions)
+  t.looseEquals(results, [])
 
   clock.tick(150)
   t.looseEquals(results, ['f', 'fo', 'foo'])
@@ -137,67 +142,32 @@ test('deletes all characters at the speed set via `deleteOptions`', function (t)
   clock.tick(150)
   t.looseEquals(results, ['f', 'fo', 'foo', 'fo', 'f', '', 'b', 'ba', 'bar'])
 
-  clock.tick(5)
-  t.looseEquals(results, [
-    'f',
-    'fo',
-    'foo',
-    'fo',
-    'f',
-    '',
-    'b',
-    'ba',
-    'bar',
-    'ba'
-  ])
+  clock.tick(1)
+  t.looseEquals(results, ['f', 'fo', 'foo', 'fo', 'f', '', 'b', 'ba', 'bar', 'ba']) // prettier-ignore
 
-  clock.tick(5)
-  t.looseEquals(results, [
-    'f',
-    'fo',
-    'foo',
-    'fo',
-    'f',
-    '',
-    'b',
-    'ba',
-    'bar',
-    'ba',
-    'b'
-  ])
+  clock.tick(1)
+  t.looseEquals(results, ['f', 'fo', 'foo', 'fo', 'f', '', 'b', 'ba', 'bar', 'ba', 'b']) // prettier-ignore
 
-  clock.tick(5)
-  t.looseEquals(results, [
-    'f',
-    'fo',
-    'foo',
-    'fo',
-    'f',
-    '',
-    'b',
-    'ba',
-    'bar',
-    'ba',
-    'b',
-    ''
-  ])
+  clock.tick(1)
+  t.looseEquals(results, ['f', 'fo', 'foo', 'fo', 'f', '', 'b', 'ba', 'bar', 'ba', 'b', '']) // prettier-ignore
 
   clock.uninstall()
 })
 
 test('deletes the specified number of characters characters at the speed set via `deleteOptions`', function (t) {
-  t.plan(6)
+  t.plan(8)
   const clock = lolex.install()
   const results = []
   function callback (text) {
     results.push(text)
   }
-  const deleteOptions = { deleteSpeed: 2 }
+  const deleteOptions = { deleteSpeed: 1 }
   malarkey(callback)
     .type('foo')
     .delete(2)
     .type('bar')
-    .delete(1, deleteOptions)
+    .delete(2, deleteOptions)
+  t.looseEquals(results, [])
 
   clock.tick(150)
   t.looseEquals(results, ['f', 'fo', 'foo'])
@@ -211,31 +181,14 @@ test('deletes the specified number of characters characters at the speed set via
   clock.tick(150)
   t.looseEquals(results, ['f', 'fo', 'foo', 'fo', 'f', 'fb', 'fba', 'fbar'])
 
-  clock.tick(2)
-  t.looseEquals(results, [
-    'f',
-    'fo',
-    'foo',
-    'fo',
-    'f',
-    'fb',
-    'fba',
-    'fbar',
-    'fba'
-  ])
+  clock.tick(1)
+  t.looseEquals(results, ['f', 'fo', 'foo', 'fo', 'f', 'fb', 'fba', 'fbar', 'fba']) // prettier-ignore
 
-  clock.tick(2)
-  t.looseEquals(results, [
-    'f',
-    'fo',
-    'foo',
-    'fo',
-    'f',
-    'fb',
-    'fba',
-    'fbar',
-    'fba'
-  ])
+  clock.tick(1)
+  t.looseEquals(results, ['f', 'fo', 'foo', 'fo', 'f', 'fb', 'fba', 'fbar', 'fba', 'fb']) // prettier-ignore
+
+  clock.tick(1)
+  t.looseEquals(results, ['f', 'fo', 'foo', 'fo', 'f', 'fb', 'fba', 'fbar', 'fba', 'fb']) // prettier-ignore
 
   clock.uninstall()
 })

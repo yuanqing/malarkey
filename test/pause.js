@@ -19,7 +19,7 @@ test('pauses the sequence for the default duration of 2000 milliseconds', functi
   t.looseEquals(results, ['f', 'fo', 'foo'])
 
   clock.tick(2000)
-  t.looseEquals(results, ['f', 'fo', 'foo']) // no change
+  t.looseEquals(results, ['f', 'fo', 'foo'])
 
   clock.tick(150)
   t.looseEquals(results, ['f', 'fo', 'foo', 'foob', 'fooba', 'foobar'])
@@ -44,7 +44,7 @@ test('pauses the sequence for the specified duration', function (t) {
   t.looseEquals(results, ['f', 'fo', 'foo'])
 
   clock.tick(4000)
-  t.looseEquals(results, ['f', 'fo', 'foo']) // no change
+  t.looseEquals(results, ['f', 'fo', 'foo'])
 
   clock.tick(150)
   t.looseEquals(results, ['f', 'fo', 'foo', 'foob', 'fooba', 'foobar'])

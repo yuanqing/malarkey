@@ -35,7 +35,7 @@ test('stops the sequence', function (t) {
   t.true(m.isStopped())
   t.looseEquals(results, ['f', 'fo', 'foo'])
 
-  clock.tick(1000)
+  clock.tick(10000)
   t.true(m.isStopped())
   t.looseEquals(results, ['f', 'fo', 'foo'])
 
