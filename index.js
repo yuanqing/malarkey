@@ -15,9 +15,11 @@ function malarkey (callback, options) {
   var stoppedCallback = noop
 
   var methods = {
-    type: function (text, typeOptions) {
-      var typeSpeed = typeOptions && typeOptions.typeSpeed
-      return enqueue(_type, [text, typeSpeed || options.typeSpeed || 50])
+    call: function (fn) {
+      return enqueue(_call, [fn])
+    },
+    clear: function () {
+      return enqueue(_clear, null)
     },
     delete: function (characterCount, deleteOptions) {
       if (typeof characterCount === 'object') {
@@ -30,31 +32,29 @@ function malarkey (callback, options) {
         deleteSpeed || options.deleteSpeed || 50
       ])
     },
-    clear: function () {
-      return enqueue(_clear, null)
+    isStopped: function () {
+      return isStopped
     },
     pause: function (pauseDuration) {
       return enqueue(setTimeout, [
         pauseDuration != null ? pauseDuration : options.pauseDuration || 2000
       ])
     },
-    call: function (callback) {
-      return enqueue(_call, [callback])
-    },
-    stop: function (callback) {
-      isStopped = true
-      stoppedCallback = callback || noop
-      return methods
-    },
-    start: function () {
+    resume: function () {
       if (isStopped) {
         isStopped = false
         next()
       }
       return methods
     },
-    isStopped: function () {
-      return isStopped
+    stop: function (fn) {
+      isStopped = true
+      stoppedCallback = fn || noop
+      return methods
+    },
+    type: function (text, typeOptions) {
+      var typeSpeed = typeOptions && typeOptions.typeSpeed
+      return enqueue(_type, [text, typeSpeed || options.typeSpeed || 50])
     }
   }
 
@@ -123,8 +123,8 @@ function malarkey (callback, options) {
     next()
   }
 
-  function _call (next, callback) {
-    callback(next, text)
+  function _call (next, fn) {
+    fn(next, text)
   }
 
   return methods
