@@ -3,10 +3,9 @@
 > Simulate a typewriter effect in vanilla JavaScript.
 
 - Flexible API allowing granular control
-- Option to repeat the effect indefinitely
-- Allows enqueuing a function in the sequence
+- Option to repeat the sequence indefinitely
 - Allows stopping and resuming the sequence on-the-fly
-- 522 bytes gzipped
+- 524 bytes gzipped
 
 ## Usage
 
