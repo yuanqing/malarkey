@@ -1,195 +1,119 @@
-# Malarkey.js [![npm Version](http://img.shields.io/npm/v/malarkey.svg?style=flat)](https://www.npmjs.org/package/malarkey) [![Build Status](https://img.shields.io/travis/yuanqing/malarkey.svg?branch=master&style=flat)](https://travis-ci.org/yuanqing/malarkey) [![Coverage Status](https://img.shields.io/coveralls/yuanqing/malarkey.svg?style=flat)](https://coveralls.io/r/yuanqing/malarkey)
+# malarkey [![npm Version](http://img.shields.io/npm/v/malarkey.svg?style=flat)](https://www.npmjs.org/package/malarkey) [![Build Status](https://img.shields.io/travis/yuanqing/malarkey.svg?branch=master&style=flat)](https://travis-ci.org/yuanqing/malarkey) [![Coverage Status](https://img.shields.io/coveralls/yuanqing/malarkey.svg?style=flat)](https://coveralls.io/r/yuanqing/malarkey)
 
 > Simulate a typewriter effect in vanilla JavaScript.
 
-## Features
-
-- [Friendly, flexible API](#api) offering fine-grained control
-- Option to [repeat the effect indefinitely](#usage)
-- Option to apply the effect on a [custom element property](#custom-element-property)
-- Allows [pausing and resuming](#pausing-and-resuming) the sequence on-the-fly
-- [Extensive tests](test), with [100% coverage](https://coveralls.io/r/yuanqing/malarkey)
-- No dependencies, and super lightweight; just 1.5 KB [minified](dist/malarkey.min.js), or 0.8 KB minified and gzipped
-
-For an in-production demo, see [the npm front page](https://npmjs.com).
+- Flexible API offering fine-grained control
+- Option to repeat the effect indefinitely
+- Allows stopping and resuming the sequence on-the-fly
+- 522 bytes gzipped
 
 ## Usage
 
-> [**Editable demo**](http://jsfiddle.net/xchon0kt/)
+> [**Editable demo (CodePen)**](https://codepen.io/lyuanqing/pen/)
 
 ```html
-<body>
-  <div class="malarkey"></div>
-  <script src="../dist/malarkey.min.js"></script>
-  <script>
-    var elem = document.querySelector('.malarkey');
-    var opts = {
-      typeSpeed: 50,
-      deleteSpeed: 50,
-      pauseDelay: 2000,
-      loop: true,
-      postfix: ''
-    };
-    malarkey(elem, opts).type('Say hello')   .pause().delete()
-                        .type('Wave goodbye').pause().delete();
-  </script>
-</body>
+<div class="typewriter"></div>
 ```
 
-### Custom element property
+```js
+const malarkey = require('malarkey')
 
-By default, the effect is applied on `elem.innerHTML`. To apply the effect on a different element property (such as the `placeholder` attribute of an `input` element), pass in `opts.getter` and `opts.setter`, like so:
-
-> [**Editable demo**](http://jsfiddle.net/za9mazh3/)
-
-```html
-<body>
-  <input type="text" class="malarkey">
-  <script src="../dist/malarkey.min.js"></script>
-  <script>
-    var elem = document.querySelector('.malarkey');
-    var attr = 'placeholder';
-    var opts = {
-      loop: true,
-      getter: function(elem) {
-        return elem.getAttribute(attr) || '';
-      },
-      setter: function(elem, val) {
-        elem.setAttribute(attr, val);
-      }
-    };
-    malarkey(elem, opts).type('Say hello')   .pause().delete()
-                        .type('Wave goodbye').pause().delete();
-  </script>
-</body>
+const element = document.querySelector('.typewriter')
+function callback (text) {
+  element.innerHTML = text
+}
+const options = {
+  typeSpeed: 50,
+  deleteSpeed: 50,
+  pauseDuration: 2000,
+  repeat: true
+}
+malarkey(callback, options)
+  .type('Say hello')
+  .pause()
+  .delete()
+  .type('Wave goodbye')
+  .pause()
+  .delete()
 ```
-
-### Pausing and resuming
-
-To pause and resume the sequence on-the-fly, use the `triggerPause` and `triggerResume` methods:
-
-> [**Editable demo**](http://jsfiddle.net/4gqpsazu/)
-
-```html
-<body>
-  <div class="malarkey"></div>
-  <script src="../dist/malarkey.min.js"></script>
-  <script>
-    var elem = document.querySelector('.malarkey');
-    var opts = {
-      typeSpeed: 50,
-      deleteSpeed: 50,
-      pauseDelay: 2000,
-      loop: true,
-      postfix: ''
-    };
-    var m = malarkey(elem, opts).type('Say hello')   .pause().delete()
-                                .type('Wave goodbye').pause().delete();
-    document.addEventListener('click', function() {
-      if (m.isRunning()) {
-        m.triggerPause();
-        elem.style.color = 'red';
-      } else {
-        m.triggerResume();
-        elem.style.color = 'black';
-      }
-    });
-  </script>
-</body>
-```
-
-Note that here, we toggle between calling `triggerPause` and `triggerResume` on every `click` event.
 
 ## API
 
-In the browser, `malarkey` is a global variable. In Node, do:
-
 ```js
-var malarkey = require('malarkey');
+const malarkey = require('malarkey')
 ```
 
-### var m = malarkey(elem [, opts])
+### const m = malarkey(callback [, options])
 
-Initialises the typewriter/ticker effect on `elem` with the given `opts` settings.
+Initialises the typewriter effect with the given optional `options` settings.
 
-- `elem` &mdash; A DOM element.
+- `callback` is a function that is invoked for every `type` and `delete` event. The function signature is `(text)`, where `text` is the current state of the characters that we&rsquo;ve typed and deleted.
 
-- `opts` &mdash; An object literal:
+- `options` is an object literal:
+
 
   Key | Description | Default
   :--|:--|:--
-  `loop` | Whether to repeat the entire sequence | `false`
-  `typeSpeed` | Time in milliseconds to `type` a single character | `50`
-  `deleteSpeed` | Time in milliseconds to `delete` a single character | `50`
-  `pauseDelay` | Delay in milliseconds to `pause` | `2000`
-  `postfix` | A string appended to any `str` passed to `type` and `delete` | `''`
-  `getter` | A function to get the current value of `elem` | Returns `elem.innerHTML`
-  `setter` | A function to assign a new value to `elem` | Assigns to `elem.innerHTML`
+  `typeSpeed` | Duration in milliseconds to `type` a single character | `50`
+  `deleteSpeed` | Duration in milliseconds to `delete` a single character | `50`
+  `pauseDuration` | Duration in milliseconds to `pause` | `2000`
+  `repeat` | Whether to repeat the entire sequence indefinitely | `false`
 
-### m.type(str [, speed])
+### m.type(string [, options])
 
-Type the `str` at the given `speed`.
+Type the given `string`, one character at a time.
 
-- `speed` &mdash; Defaults to `opts.typeSpeed`.
+- Set `options.speed` to override the default type speed.
 
-### m.delete()
+### m.delete([characterCount, options])
 
-Delete the contents of `elem`, one character at a time, at the default speed.
+Delete the specified number of characters, one character at a time.
 
-### m.delete(str [, speed])
+- `characterCount` is a positive integer. If not specified, all characters previously typed will be deleted, one character at a time.
+- Set `options.speed` to override the default delete speed.
 
-Delete the given `str`, one character at a time, at the given `speed`.
+### m.pause([options])
 
-- `str` &mdash; `null`, or a string. If `null`, deletes every character in `elem`. Else deletes `str` from `elem` if and only if `elem` ends with `str`.
-- `speed` &mdash; Defaults to `opts.deleteSpeed`.
+Do nothing for a period of time.
 
-### m.delete(n [, speed])
-
-Delete the last `n` characters of `elem`, one character at a time, at the given `speed`.
-
-- `n` &mdash; An integer. If `-1`, deletes every character in `elem`. Else deletes the last `n` characters of `elem`.
-- `speed` &mdash; Defaults to `opts.deleteSpeed`.
+- Set `options.duration` to override the default pause duration.
 
 ### m.clear()
 
-Clear the contents of `elem`.
-
-### m.pause([delay])
-
-Do nothing for `delay`.
-
-- `delay` &mdash; Defaults to `opts.pauseDelay`.
+Clear all characters previously typed.
 
 ### m.call(fn)
 
-Call the given `fn`, passing it `elem` as the first argument.
+Call the given `fn` function.
 
-- `fn` &mdash; Can be asynchronous. We must invoke `this` within this function to signal that it has finished execution.
+- The function signature of `fn` is `(callback, text)`. Invoke `callback` to signal that `fn` has finished execution and that we can move on to the next event in the sequence.
 
-### m.triggerPause([fn])
+### m.triggerStop([fn])
 
-Pauses the sequence. Calls the given `fn` when the sequence has been paused, passing it `elem` as the first argument.
+Stops the sequence. Calls the given `fn` function when the sequence has been stopped.
+
+- The function signature of `fn` is `(text)`.
 
 ### m.triggerResume()
 
-Resumes the sequence *immediately*. Has no effect if the sequence is already running.
+Resume the sequence. Has no effect if the sequence is already running.
 
-### m.isRunning()
+### m.isStopped()
 
-Returns `true` if the sequence is currently running. Else returns `false`.
+Returns `true` if the sequence is currently stopped, else returns `false`.
 
 ## Installation
 
-Install via [npm](https://npmjs.com):
+Install via [yarn](https://yarnpkg.com):
 
-```
-$ npm i --save malarkey
+```sh
+$ yarn add malarkey
 ```
 
-Install via [bower](http://bower.io):
+Or [npm](https://npmjs.com):
 
-```
-$ bower i --save yuanqing/malarkey
+```sh
+$ npm install --save malarkey
 ```
 
 ## License
