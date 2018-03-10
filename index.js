@@ -29,32 +29,31 @@ function malarkey (callback, options) {
       var deleteSpeed = deleteOptions && deleteOptions.deleteSpeed
       return enqueue(_delete, [
         characterCount || DELETE_ALL_SENTINEL,
-        deleteSpeed || options.deleteSpeed || 50
+        (deleteOptions ? deleteOptions.speed : options.deleteSpeed) || 50
       ])
     },
     isStopped: function () {
       return isStopped
     },
-    pause: function (pauseDuration) {
+    pause: function (pauseOptions) {
       return enqueue(setTimeout, [
-        pauseDuration != null ? pauseDuration : options.pauseDuration || 2000
+        (pauseOptions ? pauseOptions.duration : options.pauseDuration) || 2000
       ])
     },
-    resume: function () {
+    triggerResume: function () {
       if (isStopped) {
         isStopped = false
         next()
       }
       return methods
     },
-    stop: function (fn) {
+    triggerStop: function (fn) {
       isStopped = true
       stoppedCallback = fn || noop
       return methods
     },
     type: function (text, typeOptions) {
-      var typeSpeed = typeOptions && typeOptions.typeSpeed
-      return enqueue(_type, [text, typeSpeed || options.typeSpeed || 50])
+      return enqueue(_type, [text, (typeOptions ? typeOptions.speed : options.typeSpeed) || 50])
     }
   }
 
