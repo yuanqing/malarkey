@@ -26,7 +26,6 @@ function malarkey (callback, options) {
         deleteOptions = characterCount
         characterCount = DELETE_ALL_SENTINEL
       }
-      var deleteSpeed = deleteOptions && deleteOptions.deleteSpeed
       return enqueue(_delete, [
         characterCount || DELETE_ALL_SENTINEL,
         (deleteOptions ? deleteOptions.speed : options.deleteSpeed) || 50
@@ -53,7 +52,10 @@ function malarkey (callback, options) {
       return methods
     },
     type: function (text, typeOptions) {
-      return enqueue(_type, [text, (typeOptions ? typeOptions.speed : options.typeSpeed) || 50])
+      return enqueue(_type, [
+        text,
+        (typeOptions ? typeOptions.speed : options.typeSpeed) || 50
+      ])
     }
   }
 
