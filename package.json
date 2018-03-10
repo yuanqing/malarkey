@@ -15,7 +15,7 @@
     "prettier-standard": "^8.0.0",
     "standard": "^11.0.0",
     "tape": "^4.9.0",
-    "uglify-js": "^3.3.13"
+    "uglify-js": "^3.3.14"
   },
   "scripts": {
     "clean": "rm -rf *.log coverage",
