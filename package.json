@@ -1,6 +1,6 @@
 {
   "name": "malarkey",
-  "version": "1.3.3",
+  "version": "2.0.0",
   "description": "Simulate a typewriter effect in vanilla JavaScript.",
   "author": "Lim Yuan Qing",
   "license": "MIT",
