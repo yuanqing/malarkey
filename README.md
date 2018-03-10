@@ -21,7 +21,7 @@ const malarkey = require('malarkey')
 
 const element = document.querySelector('.typewriter')
 function callback (text) {
-  element.innerHTML = text
+  element.textContent = text
 }
 const options = {
   typeSpeed: 50,
