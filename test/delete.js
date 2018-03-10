@@ -112,19 +112,18 @@ test('deletes the specified number of characters at the speed set via `options`'
   clock.uninstall()
 })
 
-test('deletes all characters at the speed set via `deleteOptions`', function (t) {
+test('deletes all characters at the specified speed', function (t) {
   t.plan(9)
   const clock = lolex.install()
   const results = []
   function callback (text) {
     results.push(text)
   }
-  const deleteOptions = { deleteSpeed: 1 }
   malarkey(callback)
     .type('foo')
     .delete()
     .type('bar')
-    .delete(deleteOptions)
+    .delete({ speed: 1 })
   t.looseEquals(results, [])
 
   clock.tick(150)
@@ -154,19 +153,18 @@ test('deletes all characters at the speed set via `deleteOptions`', function (t)
   clock.uninstall()
 })
 
-test('deletes the specified number of characters characters at the speed set via `deleteOptions`', function (t) {
+test('deletes the specified number of characters characters at the specified speed', function (t) {
   t.plan(8)
   const clock = lolex.install()
   const results = []
   function callback (text) {
     results.push(text)
   }
-  const deleteOptions = { deleteSpeed: 1 }
   malarkey(callback)
     .type('foo')
     .delete(2)
     .type('bar')
-    .delete(2, deleteOptions)
+    .delete(2, { speed: 1 })
   t.looseEquals(results, [])
 
   clock.tick(150)

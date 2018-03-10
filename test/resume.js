@@ -12,12 +12,12 @@ test('resumes the stopped sequence', function (t) {
   const m = malarkey(callback).type('foo')
   t.false(m.isStopped())
   t.looseEquals(results, [])
-  m.stop()
+  m.triggerStop()
 
   clock.tick(150)
   t.true(m.isStopped())
   t.looseEquals(results, [])
-  m.resume()
+  m.triggerResume()
 
   clock.tick(150)
   t.looseEquals(results, ['f', 'fo', 'foo'])
@@ -41,7 +41,7 @@ test('has no effect if the sequence is already running', function (t) {
   clock.tick(50)
   t.false(m.isStopped())
   t.looseEquals(results, ['f'])
-  m.resume()
+  m.triggerResume()
 
   clock.tick(50)
   t.false(m.isStopped())

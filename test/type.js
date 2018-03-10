@@ -56,7 +56,7 @@ test('types at the specified speed', function (t) {
   }
   malarkey(callback)
     .type('foo')
-    .type('bar', { typeSpeed: 2 })
+    .type('bar', { speed: 2 })
   t.looseEquals(results, [])
 
   clock.tick(50)

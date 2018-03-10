@@ -3,19 +3,23 @@ const test = require('tape')
 const malarkey = require('../')
 
 test('stops the sequence', function (t) {
-  t.plan(12)
+  t.plan(14)
   const clock = lolex.install()
   const results = []
   function callback (text) {
     results.push(text)
   }
-  function fn (fnCallback) {
+  function stopFn (text) {
+    t.equals(text, 'foo')
+    t.looseEquals(results, ['f', 'fo', 'foo'])
+  }
+  function callFn (callFnCallback) {
     t.fail()
-    fnCallback()
+    callFnCallback()
   }
   const m = malarkey(callback)
     .type('foo')
-    .call(fn)
+    .call(callFn)
   t.false(m.isStopped())
   t.looseEquals(results, [])
 
@@ -27,7 +31,7 @@ test('stops the sequence', function (t) {
   t.false(m.isStopped())
   t.looseEquals(results, ['f', 'fo'])
 
-  m.stop()
+  m.triggerStop(stopFn)
   t.true(m.isStopped())
   t.looseEquals(results, ['f', 'fo'])
 

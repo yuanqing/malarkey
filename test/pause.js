@@ -36,7 +36,7 @@ test('pauses the sequence for the specified duration', function (t) {
   }
   malarkey(callback)
     .type('foo')
-    .pause(4000)
+    .pause({ duration: 4000 })
     .type('bar')
   t.looseEquals(results, [])
 

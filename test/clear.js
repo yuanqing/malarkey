@@ -11,7 +11,7 @@ test('clears the text', function (t) {
   }
   malarkey(callback)
     .type('foo')
-    .pause(1)
+    .pause({ duration: 1 })
     .clear()
   t.looseEquals(results, [])
 
