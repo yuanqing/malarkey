@@ -56,7 +56,7 @@ test('deletes the specified number of characters at the default speed of 50 mill
   clock.uninstall()
 })
 
-test('deletes all characters at the speed set via `options`', function (t) {
+test('deletes all characters at the speed set via `options.deleteSpeed`', function (t) {
   t.plan(5)
   const clock = lolex.install()
   const results = []
@@ -84,7 +84,7 @@ test('deletes all characters at the speed set via `options`', function (t) {
   clock.uninstall()
 })
 
-test('deletes the specified number of characters at the speed set via `options`', function (t) {
+test('deletes the specified number of characters at the speed set via `options.deleteSpeed`', function (t) {
   t.plan(5)
   const clock = lolex.install()
   const results = []
@@ -112,7 +112,7 @@ test('deletes the specified number of characters at the speed set via `options`'
   clock.uninstall()
 })
 
-test('deletes all characters at the specified speed', function (t) {
+test('deletes all characters at the specified `speed`', function (t) {
   t.plan(9)
   const clock = lolex.install()
   const results = []
@@ -153,7 +153,7 @@ test('deletes all characters at the specified speed', function (t) {
   clock.uninstall()
 })
 
-test('deletes the specified number of characters characters at the specified speed', function (t) {
+test('deletes the specified number of characters characters at the specified `speed`', function (t) {
   t.plan(8)
   const clock = lolex.install()
   const results = []

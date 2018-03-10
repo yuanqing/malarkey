@@ -27,7 +27,7 @@ test('pauses the sequence for the default duration of 2000 milliseconds', functi
   clock.uninstall()
 })
 
-test('pauses the sequence for the specified duration', function (t) {
+test('pauses the sequence for the specified `duration`', function (t) {
   t.plan(4)
   const clock = lolex.install()
   const results = []

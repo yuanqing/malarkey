@@ -24,7 +24,7 @@ test('types at the default speed of 50 milliseconds', function (t) {
   clock.uninstall()
 })
 
-test('types at the speed set via `options`', function (t) {
+test('types at the speed set via `options.typeSpeed`', function (t) {
   t.plan(4)
   const clock = lolex.install()
   const results = []
@@ -47,7 +47,7 @@ test('types at the speed set via `options`', function (t) {
   clock.uninstall()
 })
 
-test('types at the specified speed', function (t) {
+test('types at the specified `speed`', function (t) {
   t.plan(7)
   const clock = lolex.install()
   const results = []
