@@ -3,3 +3,5 @@
 coverage/
 node_modules/
 *.log
+cjs/*
+malarkey.min.js
