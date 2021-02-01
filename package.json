@@ -13,11 +13,15 @@
     "lolex": "^2.3.2",
     "nyc": "^11.6.0",
     "prettier-standard": "^8.0.0",
+    "rollup": "^0.58.1",
+    "rollup-plugin-commonjs": "^9.1.0",
+    "rollup-plugin-uglify": "^3.0.0",
     "standard": "^11.0.1",
     "tape": "^4.9.0",
     "uglify-js": "^3.3.16"
   },
   "scripts": {
+    "postinstall": "npx rollup -c",
     "clean": "rm -rf *.log coverage",
     "coverage": "yarn clean && nyc --reporter=html --reporter=lcov --reporter=text npm test",
     "fix": "prettier-standard index.js 'test/**/*.js'",
